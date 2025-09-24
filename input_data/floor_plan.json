@@ -1,0 +1,1722 @@
+{
+    "version": "2.1",
+    "unit": "ft",
+    "id": "f01f0946-7f41-4a56-a6ff-1b3aa41ac0b3",
+    "createdAt": "2025-08-22T11:02:14.657404Z",
+    "address": "Flat 2245, 7th Avenue, Gaur City 1, Sector 4, Greater Noida West, Uttar Pradesh, 201309, India, A1",
+    "compassHeading": -84,
+    "compassEnabled": true,
+    "propertyType": "Other",
+    "totalLivingAreaAboveGround": 670,
+    "totalLivingAreaBelowGround": 0,
+    "totalNonLivingAreaAboveGround": 103,
+    "totalNonLivingAreaBelowGround": 0,
+    "totalGarageArea": 0,
+    "totalNumberOfHalfBaths": 0,
+    "totalNumberOfFullBaths": 2,
+    "totalNumberOfEnsuites": 1,
+    "totalNumberOfJackAndJillBaths": 0,
+    "totalNumberOfBedrooms": 2,
+    "totalNumberOfGarages": 0,
+    "totalNumberOfEntrances": 5,
+    "totalNumberOfFireplaces": 0,
+    "totalLinearWindowCoverageRatio": 0.034,
+    "floors": [
+        {
+            "belowGround": false,
+            "numberOfEntrances": 5,
+            "numberOfFireplaces": 0,
+            "numberOfHalfBaths": 0,
+            "numberOfFullBaths": 2,
+            "numberOfEnsuites": 1,
+            "numberOfJackAndJillBaths": 0,
+            "numberOfBedrooms": 2,
+            "numberOfGarages": 0,
+            "linearWindowCoverageRatio": 0.034,
+            "spaceGroups": {
+                "halfBathSpaces": [],
+                "fullBathSpaces": [
+                    [
+                        "55363cc9-7a46-4839-b571-e75cc147d5a9"
+                    ],
+                    [
+                        "fc3ef8a2-be79-4646-b957-5e3dd4de8fbf"
+                    ]
+                ],
+                "jackAndJillBathSpaces": [],
+                "ensuiteBathSpaces": [
+                    [
+                        "55363cc9-7a46-4839-b571-e75cc147d5a9"
+                    ]
+                ],
+                "ensuiteBedroomSpaces": [
+                    [
+                        "c19b885c-b53a-4aa6-97c3-6ece5b4973ec"
+                    ]
+                ]
+            },
+            "spaces": [
+                {
+                    "id": "d2b0869b-9914-439d-839f-b0f996871dfe",
+                    "class": "Bedroom",
+                    "name": "BEDROOM",
+                    "properties": {
+                        "Heated": true,
+                        "Finished": true,
+                        "Enclosed": true,
+                        "Contiguous": true,
+                        "Permitted": true,
+                        "WetSpace": false,
+                        "Addition": false,
+                        "Conversion": false,
+                        "ADU": false
+                    },
+                    "connectedSpaces": {
+                        "door": [
+                            "999713c8-1495-4d92-b138-0cd4adc6e02b",
+                            "7cdd735f-b269-494f-bc67-222a17386380"
+                        ],
+                        "edge": []
+                    },
+                    "maxDimensions": {
+                        "type": "Point",
+                        "coordinates": [
+                            161.7,
+                            113.8
+                        ]
+                    },
+                    "spaceType": "Bedroom",
+                    "ceilingHeight": 94.48824,
+                    "grossArea": 113.09521560626527,
+                    "boundaryPolygon": {
+                        "type": "Polygon",
+                        "coordinates": [
+                            [
+                                224.8,
+                                319.6
+                            ],
+                            [
+                                63.1,
+                                319.6
+                            ],
+                            [
+                                63.1,
+                                279.8
+                            ],
+                            [
+                                91.4,
+                                279.8
+                            ],
+                            [
+                                91.4,
+                                205.8
+                            ],
+                            [
+                                224.8,
+                                205.8
+                            ]
+                        ]
+                    },
+                    "grossAreaEquation": "-((224.8 + 224.8) * (205.8 - 319.6) + (224.8 + 63.1) * (319.6 - 319.6) + (63.1 + 63.1) * (319.6 - 279.8) + (63.1 + 91.4) * (279.8 - 279.8) + (91.4 + 91.4) * (279.8 - 205.8) + (91.4 + 224.8) * (205.8 - 205.8)) * 0.5",
+                    "netArea": 105.2803063022123,
+                    "perimeter": 550.8900530899353,
+                    "wallPerimeter": 556.890052485199,
+                    "doorPerimeter": 92.62210110473632,
+                    "windowPerimeter": 0,
+                    "doors": [
+                        {
+                            "location": {
+                                "type": "LineString",
+                                "coordinates": [
+                                    [
+                                        224.8,
+                                        240.7
+                                    ],
+                                    [
+                                        224.8,
+                                        208.9
+                                    ]
+                                ]
+                            },
+                            "entry": false,
+                            "operationType": "Swing"
+                        },
+                        {
+                            "location": {
+                                "type": "LineString",
+                                "coordinates": [
+                                    [
+                                        91.4,
+                                        209.4
+                                    ],
+                                    [
+                                        91.4,
+                                        270.3
+                                    ]
+                                ]
+                            },
+                            "entry": true,
+                            "operationType": "ParallelSlide"
+                        }
+                    ],
+                    "windows": [],
+                    "fixedFurniture": [
+                        {
+                            "class": "Closet",
+                            "boundingPolygon": {
+                                "type": "Polygon",
+                                "coordinates": [
+                                    [
+                                        63.1,
+                                        319.6
+                                    ],
+                                    [
+                                        63.1,
+                                        299.7
+                                    ],
+                                    [
+                                        91.4,
+                                        299.7
+                                    ],
+                                    [
+                                        91.4,
+                                        319.6
+                                    ]
+                                ]
+                            },
+                            "area": 3.9074546520264817,
+                            "maxDimensions": {
+                                "type": "Point",
+                                "coordinates": [
+                                    19.9,
+                                    28.3
+                                ]
+                            }
+                        },
+                        {
+                            "class": "Closet",
+                            "boundingPolygon": {
+                                "type": "Polygon",
+                                "coordinates": [
+                                    [
+                                        63.1,
+                                        299.7
+                                    ],
+                                    [
+                                        63.1,
+                                        279.8
+                                    ],
+                                    [
+                                        91.4,
+                                        279.8
+                                    ],
+                                    [
+                                        91.4,
+                                        299.7
+                                    ]
+                                ]
+                            },
+                            "area": 3.907454652026493,
+                            "maxDimensions": {
+                                "type": "Point",
+                                "coordinates": [
+                                    19.9,
+                                    28.3
+                                ]
+                            }
+                        }
+                    ],
+                    "fixedStructures": []
+                },
+                {
+                    "id": "c19b885c-b53a-4aa6-97c3-6ece5b4973ec",
+                    "class": "Bedroom Master",
+                    "name": "PRIMARY BEDROOM",
+                    "properties": {
+                        "Heated": true,
+                        "Finished": true,
+                        "Enclosed": true,
+                        "Contiguous": true,
+                        "Permitted": true,
+                        "WetSpace": false,
+                        "Addition": false,
+                        "Conversion": false,
+                        "ADU": false
+                    },
+                    "connectedSpaces": {
+                        "door": [
+                            "55363cc9-7a46-4839-b571-e75cc147d5a9",
+                            "999713c8-1495-4d92-b138-0cd4adc6e02b",
+                            "7cdd735f-b269-494f-bc67-222a17386380"
+                        ],
+                        "edge": []
+                    },
+                    "maxDimensions": {
+                        "type": "Point",
+                        "coordinates": [
+                            173.1,
+                            122
+                        ]
+                    },
+                    "spaceType": "Bedroom",
+                    "ceilingHeight": 113.38588800000001,
+                    "grossArea": 136.58043934311854,
+                    "boundaryPolygon": {
+                        "type": "Polygon",
+                        "coordinates": [
+                            [
+                                264.6,
+                                201.8
+                            ],
+                            [
+                                109.9,
+                                201.8
+                            ],
+                            [
+                                109.9,
+                                124
+                            ],
+                            [
+                                91.4,
+                                124
+                            ],
+                            [
+                                91.4,
+                                79.8
+                            ],
+                            [
+                                264.6,
+                                79.8
+                            ]
+                        ]
+                    },
+                    "grossAreaEquation": "-((264.6 + 264.6) * (79.8 - 201.8) + (264.6 + 109.9) * (201.8 - 201.8) + (109.9 + 109.9) * (201.8 - 124) + (109.9 + 91.4) * (124 - 124) + (91.4 + 91.4) * (124 - 79.8) + (91.4 + 264.6) * (79.8 - 79.8)) * 0.5",
+                    "netArea": 130.99415336044024,
+                    "perimeter": 590.2365199763183,
+                    "wallPerimeter": 590.2365199763183,
+                    "doorPerimeter": 125.07094881864927,
+                    "windowPerimeter": 0,
+                    "doors": [
+                        {
+                            "location": {
+                                "type": "LineString",
+                                "coordinates": [
+                                    [
+                                        264.6,
+                                        83
+                                    ],
+                                    [
+                                        264.6,
+                                        111.4
+                                    ]
+                                ]
+                            },
+                            "entry": false,
+                            "operationType": "Swing"
+                        },
+                        {
+                            "location": {
+                                "type": "LineString",
+                                "coordinates": [
+                                    [
+                                        263.4,
+                                        201.8
+                                    ],
+                                    [
+                                        231.2,
+                                        201.8
+                                    ]
+                                ]
+                            },
+                            "entry": false,
+                            "operationType": "Swing"
+                        },
+                        {
+                            "location": {
+                                "type": "LineString",
+                                "coordinates": [
+                                    [
+                                        109.9,
+                                        196.3
+                                    ],
+                                    [
+                                        109.9,
+                                        131.8
+                                    ]
+                                ]
+                            },
+                            "entry": true,
+                            "operationType": "ParallelSlide"
+                        }
+                    ],
+                    "windows": [],
+                    "fixedFurniture": [
+                        {
+                            "class": "Closet",
+                            "boundingPolygon": {
+                                "type": "Polygon",
+                                "coordinates": [
+                                    [
+                                        91.5,
+                                        124
+                                    ],
+                                    [
+                                        91.5,
+                                        101.9
+                                    ],
+                                    [
+                                        109.7,
+                                        101.9
+                                    ],
+                                    [
+                                        109.7,
+                                        124
+                                    ]
+                                ]
+                            },
+                            "area": 2.7931429913391432,
+                            "maxDimensions": {
+                                "type": "Point",
+                                "coordinates": [
+                                    22.1,
+                                    18.2
+                                ]
+                            }
+                        },
+                        {
+                            "class": "Closet",
+                            "boundingPolygon": {
+                                "type": "Polygon",
+                                "coordinates": [
+                                    [
+                                        91.5,
+                                        101.9
+                                    ],
+                                    [
+                                        91.5,
+                                        79.8
+                                    ],
+                                    [
+                                        109.7,
+                                        79.8
+                                    ],
+                                    [
+                                        109.7,
+                                        101.9
+                                    ]
+                                ]
+                            },
+                            "area": 2.7931429913391432,
+                            "maxDimensions": {
+                                "type": "Point",
+                                "coordinates": [
+                                    22.1,
+                                    18.2
+                                ]
+                            }
+                        }
+                    ],
+                    "fixedStructures": []
+                },
+                {
+                    "id": "fc3ef8a2-be79-4646-b957-5e3dd4de8fbf",
+                    "class": "Bath",
+                    "name": "BATH",
+                    "properties": {
+                        "Heated": true,
+                        "Finished": true,
+                        "Enclosed": true,
+                        "Contiguous": true,
+                        "Permitted": true,
+                        "WetSpace": true,
+                        "Addition": false,
+                        "Conversion": false,
+                        "ADU": false
+                    },
+                    "connectedSpaces": {
+                        "door": [
+                            "7cdd735f-b269-494f-bc67-222a17386380"
+                        ],
+                        "edge": []
+                    },
+                    "maxDimensions": {
+                        "type": "Point",
+                        "coordinates": [
+                            86.9,
+                            56.2
+                        ]
+                    },
+                    "spaceType": "FullBath",
+                    "ceilingHeight": 94.48824,
+                    "grossArea": 33.8565642752585,
+                    "boundaryPolygon": {
+                        "type": "Polygon",
+                        "coordinates": [
+                            [
+                                355.5,
+                                199.8
+                            ],
+                            [
+                                352.8,
+                                199.8
+                            ],
+                            [
+                                352.8,
+                                201.8
+                            ],
+                            [
+                                268.6,
+                                201.8
+                            ],
+                            [
+                                268.6,
+                                145.6
+                            ],
+                            [
+                                355.5,
+                                145.6
+                            ]
+                        ]
+                    },
+                    "grossAreaEquation": "-((355.5 + 355.5) * (145.6 - 199.8) + (355.5 + 352.8) * (199.8 - 199.8) + (352.8 + 352.8) * (199.8 - 201.8) + (352.8 + 268.6) * (201.8 - 201.8) + (268.6 + 268.6) * (201.8 - 145.6) + (268.6 + 355.5) * (145.6 - 145.6)) * 0.5",
+                    "netArea": 11.640638293767342,
+                    "perimeter": 286.23636638934323,
+                    "wallPerimeter": 286.23636638934323,
+                    "doorPerimeter": 29.696863546447787,
+                    "windowPerimeter": 0,
+                    "doors": [
+                        {
+                            "location": {
+                                "type": "LineString",
+                                "coordinates": [
+                                    [
+                                        300.5,
+                                        201.8
+                                    ],
+                                    [
+                                        270.8,
+                                        201.8
+                                    ]
+                                ]
+                            },
+                            "entry": false,
+                            "operationType": "Swing"
+                        }
+                    ],
+                    "windows": [],
+                    "fixedFurniture": [
+                        {
+                            "class": "BaseCabinet",
+                            "boundingPolygon": {
+                                "type": "Polygon",
+                                "coordinates": [
+                                    [
+                                        268.6,
+                                        145.6
+                                    ],
+                                    [
+                                        292.8,
+                                        145.6
+                                    ],
+                                    [
+                                        292.8,
+                                        169.2
+                                    ],
+                                    [
+                                        268.6,
+                                        169.2
+                                    ]
+                                ]
+                            },
+                            "area": 3.9674090383944236,
+                            "maxDimensions": {
+                                "type": "Point",
+                                "coordinates": [
+                                    24.2,
+                                    23.6
+                                ]
+                            }
+                        },
+                        {
+                            "class": "ShowerPlatform",
+                            "boundingPolygon": {
+                                "type": "Polygon",
+                                "coordinates": [
+                                    [
+                                        324.8,
+                                        202.3
+                                    ],
+                                    [
+                                        324.8,
+                                        146
+                                    ],
+                                    [
+                                        355.5,
+                                        146
+                                    ],
+                                    [
+                                        355.5,
+                                        202.3
+                                    ]
+                                ]
+                            },
+                            "area": 11.986955480726877,
+                            "maxDimensions": {
+                                "type": "Point",
+                                "coordinates": [
+                                    56.3,
+                                    30.7
+                                ]
+                            }
+                        },
+                        {
+                            "class": "Toilet",
+                            "boundingPolygon": {
+                                "type": "Polygon",
+                                "coordinates": [
+                                    [
+                                        305.9,
+                                        145.6
+                                    ],
+                                    [
+                                        322,
+                                        145.6
+                                    ],
+                                    [
+                                        322,
+                                        173.6
+                                    ],
+                                    [
+                                        305.9,
+                                        173.6
+                                    ]
+                                ]
+                            },
+                            "area": 3.1313723446173163,
+                            "maxDimensions": {
+                                "type": "Point",
+                                "coordinates": [
+                                    16.1,
+                                    28
+                                ]
+                            }
+                        },
+                        {
+                            "class": "RoundSink",
+                            "boundingPolygon": {
+                                "type": "Polygon",
+                                "coordinates": [
+                                    [
+                                        271.2,
+                                        145.6
+                                    ],
+                                    [
+                                        289.3,
+                                        145.6
+                                    ],
+                                    [
+                                        289.3,
+                                        165.3
+                                    ],
+                                    [
+                                        271.2,
+                                        165.3
+                                    ]
+                                ]
+                            },
+                            "area": 2.474117620274766,
+                            "maxDimensions": {
+                                "type": "Point",
+                                "coordinates": [
+                                    18.1,
+                                    19.7
+                                ]
+                            }
+                        },
+                        {
+                            "class": "Shower",
+                            "boundingPolygon": {
+                                "type": "Polygon",
+                                "coordinates": [
+                                    [
+                                        333.7,
+                                        146
+                                    ],
+                                    [
+                                        346.4,
+                                        146
+                                    ],
+                                    [
+                                        346.4,
+                                        153.5
+                                    ],
+                                    [
+                                        333.7,
+                                        153.5
+                                    ]
+                                ]
+                            },
+                            "area": 0.6560714974777753,
+                            "maxDimensions": {
+                                "type": "Point",
+                                "coordinates": [
+                                    12.6,
+                                    7.5
+                                ]
+                            }
+                        }
+                    ],
+                    "fixedStructures": []
+                },
+                {
+                    "id": "55363cc9-7a46-4839-b571-e75cc147d5a9",
+                    "class": "Bath",
+                    "name": "BATH",
+                    "properties": {
+                        "Heated": true,
+                        "Finished": true,
+                        "Enclosed": true,
+                        "Contiguous": true,
+                        "Permitted": true,
+                        "WetSpace": true,
+                        "Addition": false,
+                        "Conversion": false,
+                        "ADU": false
+                    },
+                    "connectedSpaces": {
+                        "door": [
+                            "c19b885c-b53a-4aa6-97c3-6ece5b4973ec"
+                        ],
+                        "edge": []
+                    },
+                    "maxDimensions": {
+                        "type": "Point",
+                        "coordinates": [
+                            86.9,
+                            61.8
+                        ]
+                    },
+                    "spaceType": "FullBath",
+                    "ceilingHeight": 94.48824,
+                    "grossArea": 37.29666434993771,
+                    "boundaryPolygon": {
+                        "type": "Polygon",
+                        "coordinates": [
+                            [
+                                355.5,
+                                141.6
+                            ],
+                            [
+                                268.6,
+                                141.6
+                            ],
+                            [
+                                268.6,
+                                79.8
+                            ],
+                            [
+                                355.5,
+                                79.8
+                            ]
+                        ]
+                    },
+                    "grossAreaEquation": "-((355.5 + 355.5) * (79.8 - 141.6) + (355.5 + 268.6) * (141.6 - 141.6) + (268.6 + 268.6) * (141.6 - 79.8) + (268.6 + 355.5) * (79.8 - 79.8)) * 0.5",
+                    "netArea": 12.69047634090991,
+                    "perimeter": 297.5120048408508,
+                    "wallPerimeter": 297.5120048408508,
+                    "doorPerimeter": 28.377968800888056,
+                    "windowPerimeter": 0,
+                    "doors": [
+                        {
+                            "location": {
+                                "type": "LineString",
+                                "coordinates": [
+                                    [
+                                        268.6,
+                                        111.4
+                                    ],
+                                    [
+                                        268.6,
+                                        83
+                                    ]
+                                ]
+                            },
+                            "entry": false,
+                            "operationType": "Swing"
+                        }
+                    ],
+                    "windows": [],
+                    "fixedFurniture": [
+                        {
+                            "class": "Toilet",
+                            "boundingPolygon": {
+                                "type": "Polygon",
+                                "coordinates": [
+                                    [
+                                        321.3,
+                                        141.6
+                                    ],
+                                    [
+                                        305.1,
+                                        141.6
+                                    ],
+                                    [
+                                        305.1,
+                                        113.7
+                                    ],
+                                    [
+                                        321.3,
+                                        113.7
+                                    ]
+                                ]
+                            },
+                            "area": 3.131372344617329,
+                            "maxDimensions": {
+                                "type": "Point",
+                                "coordinates": [
+                                    16.1,
+                                    28
+                                ]
+                            }
+                        },
+                        {
+                            "class": "BaseCabinet",
+                            "boundingPolygon": {
+                                "type": "Polygon",
+                                "coordinates": [
+                                    [
+                                        299.9,
+                                        141.6
+                                    ],
+                                    [
+                                        268.6,
+                                        141.6
+                                    ],
+                                    [
+                                        268.6,
+                                        118
+                                    ],
+                                    [
+                                        299.9,
+                                        118
+                                    ]
+                                ]
+                            },
+                            "area": 5.130459243922317,
+                            "maxDimensions": {
+                                "type": "Point",
+                                "coordinates": [
+                                    31.3,
+                                    23.6
+                                ]
+                            }
+                        },
+                        {
+                            "class": "ShowerPlatform",
+                            "boundingPolygon": {
+                                "type": "Polygon",
+                                "coordinates": [
+                                    [
+                                        324.8,
+                                        141.6
+                                    ],
+                                    [
+                                        324.8,
+                                        79.8
+                                    ],
+                                    [
+                                        355.5,
+                                        79.8
+                                    ],
+                                    [
+                                        355.5,
+                                        141.6
+                                    ]
+                                ]
+                            },
+                            "area": 13.160478950375646,
+                            "maxDimensions": {
+                                "type": "Point",
+                                "coordinates": [
+                                    61.8,
+                                    30.7
+                                ]
+                            }
+                        },
+                        {
+                            "class": "RoundSink",
+                            "boundingPolygon": {
+                                "type": "Polygon",
+                                "coordinates": [
+                                    [
+                                        293,
+                                        141.6
+                                    ],
+                                    [
+                                        274.5,
+                                        141.6
+                                    ],
+                                    [
+                                        274.5,
+                                        121.9
+                                    ],
+                                    [
+                                        293,
+                                        121.9
+                                    ]
+                                ]
+                            },
+                            "area": 2.527805972634732,
+                            "maxDimensions": {
+                                "type": "Point",
+                                "coordinates": [
+                                    18.5,
+                                    19.7
+                                ]
+                            }
+                        },
+                        {
+                            "class": "Shower",
+                            "boundingPolygon": {
+                                "type": "Polygon",
+                                "coordinates": [
+                                    [
+                                        346.5,
+                                        141.6
+                                    ],
+                                    [
+                                        333.9,
+                                        141.6
+                                    ],
+                                    [
+                                        333.9,
+                                        134.2
+                                    ],
+                                    [
+                                        346.5,
+                                        134.2
+                                    ]
+                                ]
+                            },
+                            "area": 0.6560714974777753,
+                            "maxDimensions": {
+                                "type": "Point",
+                                "coordinates": [
+                                    12.6,
+                                    7.5
+                                ]
+                            }
+                        }
+                    ],
+                    "fixedStructures": []
+                },
+                {
+                    "id": "999713c8-1495-4d92-b138-0cd4adc6e02b",
+                    "class": "Outdoor Balcony",
+                    "name": "BALCONY",
+                    "properties": {
+                        "Heated": false,
+                        "Finished": true,
+                        "Enclosed": false,
+                        "Contiguous": true,
+                        "Permitted": true,
+                        "WetSpace": false,
+                        "Addition": false,
+                        "Conversion": false,
+                        "ADU": false
+                    },
+                    "connectedSpaces": {
+                        "door": [
+                            "d2b0869b-9914-439d-839f-b0f996871dfe",
+                            "c19b885c-b53a-4aa6-97c3-6ece5b4973ec"
+                        ],
+                        "edge": []
+                    },
+                    "maxDimensions": {
+                        "type": "Point",
+                        "coordinates": [
+                            82.2,
+                            271.4
+                        ]
+                    },
+                    "spaceType": "Balcony",
+                    "ceilingHeight": 94.48824,
+                    "grossArea": 102.90000143048354,
+                    "boundaryPolygon": {
+                        "type": "Polygon",
+                        "coordinates": [
+                            [
+                                85.4,
+                                130
+                            ],
+                            [
+                                103.9,
+                                130
+                            ],
+                            [
+                                103.9,
+                                199.8
+                            ],
+                            [
+                                85.4,
+                                199.8
+                            ],
+                            [
+                                85.4,
+                                273.8
+                            ],
+                            [
+                                57.1,
+                                273.8
+                            ],
+                            [
+                                57.1,
+                                341.2
+                            ],
+                            [
+                                53.9,
+                                344.9
+                            ],
+                            [
+                                46.9,
+                                349.2
+                            ],
+                            [
+                                39.1,
+                                349.1
+                            ],
+                            [
+                                28.8,
+                                346.4
+                            ],
+                            [
+                                24,
+                                341
+                            ],
+                            [
+                                21.7,
+                                335
+                            ],
+                            [
+                                21.7,
+                                142.7
+                            ],
+                            [
+                                34.6,
+                                136.6
+                            ],
+                            [
+                                42.6,
+                                131.2
+                            ],
+                            [
+                                47.8,
+                                124.8
+                            ],
+                            [
+                                48.2,
+                                115
+                            ],
+                            [
+                                48.2,
+                                77.8
+                            ],
+                            [
+                                85.4,
+                                77.8
+                            ]
+                        ]
+                    },
+                    "grossAreaEquation": "-((85.4 + 85.4) * (77.8 - 130) + (85.4 + 103.9) * (130 - 130) + (103.9 + 103.9) * (130 - 199.8) + (103.9 + 85.4) * (199.8 - 199.8) + (85.4 + 85.4) * (199.8 - 273.8) + (85.4 + 57.1) * (273.8 - 273.8) + (57.1 + 57.1) * (273.8 - 341.2) + (57.1 + 53.9) * (341.2 - 344.9) + (53.9 + 46.9) * (344.9 - 349.2) + (46.9 + 39.1) * (349.2 - 349.1) + (39.1 + 28.8) * (349.1 - 346.4) + (28.8 + 24) * (346.4 - 341) + (24 + 21.7) * (341 - 335) + (21.7 + 21.7) * (335 - 142.7) + (21.7 + 34.6) * (142.7 - 136.6) + (34.6 + 42.6) * (136.6 - 131.2) + (42.6 + 47.8) * (131.2 - 124.8) + (47.8 + 48.2) * (124.8 - 115) + (48.2 + 48.2) * (115 - 77.8) + (48.2 + 85.4) * (77.8 - 77.8)) * 0.5",
+                    "netArea": 102.90000143048354,
+                    "perimeter": 682.6741508942971,
+                    "wallPerimeter": 313.11828220355227,
+                    "doorPerimeter": 125.36226569171143,
+                    "windowPerimeter": 0,
+                    "doors": [
+                        {
+                            "location": {
+                                "type": "LineString",
+                                "coordinates": [
+                                    [
+                                        85.4,
+                                        270.3
+                                    ],
+                                    [
+                                        85.4,
+                                        209.4
+                                    ]
+                                ]
+                            },
+                            "entry": true,
+                            "operationType": "ParallelSlide"
+                        },
+                        {
+                            "location": {
+                                "type": "LineString",
+                                "coordinates": [
+                                    [
+                                        103.9,
+                                        131.8
+                                    ],
+                                    [
+                                        103.9,
+                                        196.3
+                                    ]
+                                ]
+                            },
+                            "entry": true,
+                            "operationType": "ParallelSlide"
+                        }
+                    ],
+                    "windows": [],
+                    "fixedFurniture": [],
+                    "fixedStructures": []
+                },
+                {
+                    "id": "404a2def-0fa6-4594-97f8-b43a3242d02b",
+                    "class": "Kitchen",
+                    "name": "KITCHEN",
+                    "properties": {
+                        "Heated": true,
+                        "Finished": true,
+                        "Enclosed": true,
+                        "Contiguous": true,
+                        "Permitted": true,
+                        "WetSpace": false,
+                        "Addition": false,
+                        "Conversion": false,
+                        "ADU": false
+                    },
+                    "connectedSpaces": {
+                        "door": [],
+                        "edge": [
+                            "7cdd735f-b269-494f-bc67-222a17386380"
+                        ]
+                    },
+                    "maxDimensions": {
+                        "type": "Point",
+                        "coordinates": [
+                            108.3,
+                            71.3
+                        ]
+                    },
+                    "spaceType": "Kitchen",
+                    "ceilingHeight": 88.189024,
+                    "grossArea": 53.54313241268535,
+                    "boundaryPolygon": {
+                        "type": "Polygon",
+                        "coordinates": [
+                            [
+                                432.3,
+                                277.1
+                            ],
+                            [
+                                324,
+                                277.1
+                            ],
+                            [
+                                324,
+                                205.8
+                            ],
+                            [
+                                432.3,
+                                205.8
+                            ]
+                        ]
+                    },
+                    "grossAreaEquation": "-((432.3 + 432.3) * (205.8 - 277.1) + (432.3 + 324) * (277.1 - 277.1) + (324 + 324) * (277.1 - 205.8) + (324 + 432.3) * (205.8 - 205.8)) * 0.5",
+                    "netArea": -6.267036533272143,
+                    "perimeter": 359.055312,
+                    "wallPerimeter": 288.58283299999994,
+                    "doorPerimeter": 32.90945313342286,
+                    "windowPerimeter": 0,
+                    "doors": [
+                        {
+                            "location": {
+                                "type": "LineString",
+                                "coordinates": [
+                                    [
+                                        407.3,
+                                        205.8
+                                    ],
+                                    [
+                                        374.4,
+                                        205.8
+                                    ]
+                                ]
+                            },
+                            "entry": true,
+                            "operationType": "Swing"
+                        }
+                    ],
+                    "windows": [],
+                    "fixedFurniture": [
+                        {
+                            "class": "BaseCabinet",
+                            "boundingPolygon": {
+                                "type": "Polygon",
+                                "coordinates": [
+                                    [
+                                        305.6,
+                                        205.8
+                                    ],
+                                    [
+                                        372.9,
+                                        205.8
+                                    ],
+                                    [
+                                        372.9,
+                                        229.4
+                                    ],
+                                    [
+                                        305.6,
+                                        229.4
+                                    ]
+                                ]
+                            },
+                            "area": 11.03542487332195,
+                            "maxDimensions": {
+                                "type": "Point",
+                                "coordinates": [
+                                    67.3,
+                                    23.6
+                                ]
+                            }
+                        },
+                        {
+                            "class": "BaseCabinet",
+                            "boundingPolygon": {
+                                "type": "Polygon",
+                                "coordinates": [
+                                    [
+                                        357.4,
+                                        253.4
+                                    ],
+                                    [
+                                        408.7,
+                                        253.4
+                                    ],
+                                    [
+                                        408.7,
+                                        250.4
+                                    ],
+                                    [
+                                        408.7,
+                                        205.8
+                                    ],
+                                    [
+                                        432.3,
+                                        205.8
+                                    ],
+                                    [
+                                        432.3,
+                                        277
+                                    ],
+                                    [
+                                        357.3,
+                                        277
+                                    ]
+                                ]
+                            },
+                            "area": 20.079911330452966,
+                            "maxDimensions": {
+                                "type": "Point",
+                                "coordinates": [
+                                    74.9,
+                                    71.2
+                                ]
+                            }
+                        },
+                        {
+                            "class": "Sink",
+                            "boundingPolygon": {
+                                "type": "Polygon",
+                                "coordinates": [
+                                    [
+                                        432.2,
+                                        209.9
+                                    ],
+                                    [
+                                        432.2,
+                                        233.5
+                                    ],
+                                    [
+                                        408.6,
+                                        233.5
+                                    ],
+                                    [
+                                        408.6,
+                                        209.9
+                                    ]
+                                ]
+                            },
+                            "area": 3.8725319273865826,
+                            "maxDimensions": {
+                                "type": "Point",
+                                "coordinates": [
+                                    23.6,
+                                    23.6
+                                ]
+                            }
+                        },
+                        {
+                            "class": "ElectricalAppliance IntegratedStove",
+                            "boundingPolygon": {
+                                "type": "Polygon",
+                                "coordinates": [
+                                    [
+                                        397.3,
+                                        277.1
+                                    ],
+                                    [
+                                        373.7,
+                                        277.1
+                                    ],
+                                    [
+                                        373.7,
+                                        253.4
+                                    ],
+                                    [
+                                        397.3,
+                                        253.4
+                                    ]
+                                ]
+                            },
+                            "area": 3.8725319273865955,
+                            "maxDimensions": {
+                                "type": "Point",
+                                "coordinates": [
+                                    23.6,
+                                    23.6
+                                ]
+                            }
+                        },
+                        {
+                            "class": "ElectricalAppliance Refrigerator",
+                            "boundingPolygon": {
+                                "type": "Polygon",
+                                "coordinates": [
+                                    [
+                                        357.3,
+                                        277
+                                    ],
+                                    [
+                                        328.3,
+                                        277
+                                    ],
+                                    [
+                                        328.3,
+                                        250.4
+                                    ],
+                                    [
+                                        357.3,
+                                        250.4
+                                    ]
+                                ]
+                            },
+                            "area": 5.368419795073896,
+                            "maxDimensions": {
+                                "type": "Point",
+                                "coordinates": [
+                                    29,
+                                    26.6
+                                ]
+                            }
+                        },
+                        {
+                            "class": "WallCabinet",
+                            "boundingPolygon": {
+                                "type": "Polygon",
+                                "coordinates": [
+                                    [
+                                        305.6,
+                                        205.8
+                                    ],
+                                    [
+                                        372.9,
+                                        205.8
+                                    ],
+                                    [
+                                        372.9,
+                                        217.6
+                                    ],
+                                    [
+                                        305.6,
+                                        217.6
+                                    ]
+                                ]
+                            },
+                            "area": 5.517712436660966,
+                            "maxDimensions": {
+                                "type": "Point",
+                                "coordinates": [
+                                    67.3,
+                                    11.8
+                                ]
+                            }
+                        },
+                        {
+                            "class": "WallCabinet",
+                            "boundingPolygon": {
+                                "type": "Polygon",
+                                "coordinates": [
+                                    [
+                                        357.4,
+                                        265.2
+                                    ],
+                                    [
+                                        420.5,
+                                        265.2
+                                    ],
+                                    [
+                                        420.5,
+                                        217.3
+                                    ],
+                                    [
+                                        432.2,
+                                        217.3
+                                    ],
+                                    [
+                                        432.3,
+                                        277
+                                    ],
+                                    [
+                                        357.3,
+                                        277
+                                    ]
+                                ]
+                            },
+                            "area": 10.06363665567454,
+                            "maxDimensions": {
+                                "type": "Point",
+                                "coordinates": [
+                                    74.9,
+                                    59.8
+                                ]
+                            }
+                        }
+                    ],
+                    "fixedStructures": []
+                },
+                {
+                    "id": "89e84797-eb46-4261-9208-c499717368a2",
+                    "class": "LivingRoom",
+                    "name": "LIVING ROOM",
+                    "properties": {
+                        "Heated": true,
+                        "Finished": true,
+                        "Enclosed": true,
+                        "Contiguous": true,
+                        "Permitted": true,
+                        "WetSpace": false,
+                        "Addition": false,
+                        "Conversion": false,
+                        "ADU": false
+                    },
+                    "connectedSpaces": {
+                        "door": [],
+                        "edge": [
+                            "7cdd735f-b269-494f-bc67-222a17386380"
+                        ]
+                    },
+                    "maxDimensions": {
+                        "type": "Point",
+                        "coordinates": [
+                            203.5,
+                            118
+                        ]
+                    },
+                    "spaceType": "LivingRoom",
+                    "ceilingHeight": 94.48824,
+                    "grossArea": 166.74293101217896,
+                    "boundaryPolygon": {
+                        "type": "Polygon",
+                        "coordinates": [
+                            [
+                                432.3,
+                                281.1
+                            ],
+                            [
+                                432.3,
+                                399.1
+                            ],
+                            [
+                                228.8,
+                                399.1
+                            ],
+                            [
+                                228.8,
+                                281.1
+                            ]
+                        ]
+                    },
+                    "grossAreaEquation": "-((228.8 + 432.3) * (281.1 - 281.1) + (432.3 + 432.3) * (281.1 - 399.1) + (432.3 + 228.8) * (399.1 - 399.1) + (228.8 + 228.8) * (399.1 - 281.1)) * 0.5",
+                    "netArea": 166.74293101217896,
+                    "perimeter": 643.1578256976318,
+                    "wallPerimeter": 547.8940062618408,
+                    "doorPerimeter": 92.5866574417114,
+                    "windowPerimeter": 48.57877215710448,
+                    "doors": [
+                        {
+                            "location": {
+                                "type": "LineString",
+                                "coordinates": [
+                                    [
+                                        429.9,
+                                        399.1
+                                    ],
+                                    [
+                                        394,
+                                        399.1
+                                    ]
+                                ]
+                            },
+                            "entry": true,
+                            "operationType": "Swing"
+                        },
+                        {
+                            "location": {
+                                "type": "LineString",
+                                "coordinates": [
+                                    [
+                                        228.8,
+                                        335.9
+                                    ],
+                                    [
+                                        228.8,
+                                        392.6
+                                    ]
+                                ]
+                            },
+                            "entry": true,
+                            "operationType": "ParallelSlide"
+                        }
+                    ],
+                    "windows": [
+                        {
+                            "location": {
+                                "type": "LineString",
+                                "coordinates": [
+                                    [
+                                        345.7,
+                                        399.1
+                                    ],
+                                    [
+                                        297.1,
+                                        399.1
+                                    ]
+                                ]
+                            },
+                            "direction": 90,
+                            "compassHeading": 6,
+                            "internal": false
+                        }
+                    ],
+                    "fixedFurniture": [],
+                    "fixedStructures": []
+                },
+                {
+                    "id": "7cdd735f-b269-494f-bc67-222a17386380",
+                    "class": "Dining Open",
+                    "name": "DINING AREA",
+                    "properties": {
+                        "Heated": true,
+                        "Finished": true,
+                        "Enclosed": true,
+                        "Contiguous": true,
+                        "Permitted": true,
+                        "WetSpace": false,
+                        "Addition": false,
+                        "Conversion": false,
+                        "ADU": false
+                    },
+                    "connectedSpaces": {
+                        "door": [
+                            "d2b0869b-9914-439d-839f-b0f996871dfe",
+                            "c19b885c-b53a-4aa6-97c3-6ece5b4973ec",
+                            "fc3ef8a2-be79-4646-b957-5e3dd4de8fbf"
+                        ],
+                        "edge": [
+                            "404a2def-0fa6-4594-97f8-b43a3242d02b",
+                            "89e84797-eb46-4261-9208-c499717368a2"
+                        ]
+                    },
+                    "maxDimensions": {
+                        "type": "Point",
+                        "coordinates": [
+                            95.3,
+                            75.3
+                        ]
+                    },
+                    "spaceType": "Dining",
+                    "ceilingHeight": 94.48824,
+                    "grossArea": 49.75662781543046,
+                    "boundaryPolygon": {
+                        "type": "Polygon",
+                        "coordinates": [
+                            [
+                                324,
+                                281.1
+                            ],
+                            [
+                                228.8,
+                                281.1
+                            ],
+                            [
+                                228.8,
+                                205.8
+                            ],
+                            [
+                                324,
+                                205.8
+                            ]
+                        ]
+                    },
+                    "grossAreaEquation": "-((324 + 324) * (205.8 - 281.1) + (324 + 228.8) * (281.1 - 281.1) + (228.8 + 228.8) * (281.1 - 205.8) + (228.8 + 324) * (205.8 - 205.8)) * 0.5",
+                    "netArea": 49.75662781543046,
+                    "perimeter": 341.0473840455323,
+                    "wallPerimeter": 170.52369202276614,
+                    "doorPerimeter": 93.64967897723389,
+                    "windowPerimeter": 0,
+                    "doors": [
+                        {
+                            "location": {
+                                "type": "LineString",
+                                "coordinates": [
+                                    [
+                                        270.8,
+                                        205.8
+                                    ],
+                                    [
+                                        300.5,
+                                        205.8
+                                    ]
+                                ]
+                            },
+                            "entry": false,
+                            "operationType": "Swing"
+                        },
+                        {
+                            "location": {
+                                "type": "LineString",
+                                "coordinates": [
+                                    [
+                                        231.2,
+                                        205.8
+                                    ],
+                                    [
+                                        263.4,
+                                        205.8
+                                    ]
+                                ]
+                            },
+                            "entry": false,
+                            "operationType": "Swing"
+                        },
+                        {
+                            "location": {
+                                "type": "LineString",
+                                "coordinates": [
+                                    [
+                                        228.8,
+                                        208.9
+                                    ],
+                                    [
+                                        228.8,
+                                        240.7
+                                    ]
+                                ]
+                            },
+                            "entry": false,
+                            "operationType": "Swing"
+                        }
+                    ],
+                    "windows": [],
+                    "fixedFurniture": [],
+                    "fixedStructures": []
+                }
+            ],
+            "GLA": {
+                "included": [
+                    {
+                        "name": "FLOOR 1",
+                        "area": 670,
+                        "equation": "-((361.5 + 361.5) * (73.8 - 199.8) + (361.5 + 438.3) * (199.8 - 199.8) + (438.3 + 438.3) * (199.8 - 405.1) + (438.3 + 222.8) * (405.1 - 405.1) + (222.8 + 222.8) * (405.1 - 325.6) + (222.8 + 57.1) * (325.6 - 325.6) + (57.1 + 57.1) * (325.6 - 273.8) + (57.1 + 85.4) * (273.8 - 273.8) + (85.4 + 85.4) * (273.8 - 199.8) + (85.4 + 103.9) * (199.8 - 199.8) + (103.9 + 103.9) * (199.8 - 130) + (103.9 + 85.4) * (130 - 130) + (85.4 + 85.4) * (130 - 73.8) + (85.4 + 361.5) * (73.8 - 73.8)) * 0.5 * 0.00694",
+                        "type": "primaryDwellingUnit"
+                    }
+                ],
+                "excluded": [
+                    {
+                        "name": "BALCONY",
+                        "area": 103,
+                        "equation": "-((85.4 + 85.4) * (77.8 - 130) + (85.4 + 103.9) * (130 - 130) + (103.9 + 103.9) * (130 - 199.8) + (103.9 + 85.4) * (199.8 - 199.8) + (85.4 + 85.4) * (199.8 - 273.8) + (85.4 + 57.1) * (273.8 - 273.8) + (57.1 + 57.1) * (273.8 - 341.2) + (57.1 + 53.9) * (341.2 - 344.9) + (53.9 + 46.9) * (344.9 - 349.2) + (46.9 + 39.1) * (349.2 - 349.1) + (39.1 + 28.8) * (349.1 - 346.4) + (28.8 + 24) * (346.4 - 341) + (24 + 21.7) * (341 - 335) + (21.7 + 21.7) * (335 - 142.7) + (21.7 + 34.6) * (142.7 - 136.6) + (34.6 + 42.6) * (136.6 - 131.2) + (42.6 + 47.8) * (131.2 - 124.8) + (47.8 + 48.2) * (124.8 - 115) + (48.2 + 48.2) * (115 - 77.8) + (48.2 + 85.4) * (77.8 - 77.8)) * 0.5 * 0.00694",
+                        "exclusionReasons": [
+                            "Unheated",
+                            "Not enclosed"
+                        ]
+                    }
+                ],
+                "belowGround": false
+            }
+        }
+    ],
+    "layoutIndicators": {
+        "ensuiteBathroom": true,
+        "openKitchen": true,
+        "homeOffice": false,
+        "openToBelowAreas": false,
+        "bathroomOnEachFloor": true,
+        "oneStoryLiving": true,
+        "islandKitchen": false,
+        "finishedBasement": false,
+        "abnormallySmallBedrooms": false,
+        "veryLargeBedrooms": false,
+        "veryLargeBathrooms": false,
+        "veryLargeWalkInClosets": false,
+        "outdoorSwimmingPool": false,
+        "indoorSwimmingPool": false,
+        "fireplaceInLivingArea": false,
+        "windowedKitchens": false,
+        "windowedBathrooms": false,
+        "highCeilingBedrooms": true,
+        "highCeilingBathrooms": false,
+        "highCeilingLivingrooms": false,
+        "highCeilingDiningrooms": false,
+        "highCeilingKitchens": false,
+        "primaryBathroomDualSinks": false,
+        "outdoorLivingSpace": false,
+        "coveredOutdoorLivingSpace": false,
+        "upperFloorLaundry": false,
+        "upperFloorBathroom": false
+    },
+    "layoutIndicatorDefinitions": {
+        "ensuiteBathroom": "A bathroom that is only accessible via a bedroom, creating privacy",
+        "openKitchen": "There are no walls separating the kitchen area from other living areas",
+        "homeOffice": "There is dedicated office space inside the property",
+        "openToBelowAreas": "Higher floors contain open areas to lower floors",
+        "bathroomOnEachFloor": "Every floor has at least one bathroom",
+        "oneStoryLiving": "On the main living level are all primary living areas: master bedroom, kitchen, living room, dining area, and at least one full bathroom",
+        "islandKitchen": "There is an island located in the kitchen space",
+        "finishedBasement": "The property appears to have Below Grade space that is Finished",
+        "abnormallySmallBedrooms": "One or more bedrooms in this property are smaller than 85 square feet",
+        "veryLargeBedrooms": "One or more bedrooms in this property are larger than 400 square feet",
+        "veryLargeBathrooms": "One or more bathrooms in this property are larger than 200 square feet",
+        "veryLargeWalkInClosets": "One or more walk-in-closets in this property are larger than 80 square feet",
+        "outdoorSwimmingPool": "There is an outdoor swimming pool on the property",
+        "indoorSwimmingPool": "There is a swimming pool inside an enclosed space in the primary residence",
+        "fireplaceInLivingArea": "There is one or multiple fireplaces in living area",
+        "windowedKitchens": "One or more kitchens have a window",
+        "windowedBathrooms": "One or more bathrooms have a window",
+        "highCeilingBedrooms": "One or more bedrooms have ceiling higher than 108 inches",
+        "highCeilingBathrooms": "One or more bathrooms have ceiling higher than 108 inches",
+        "highCeilingLivingrooms": "One or more living rooms have ceiling higher than 108 inches",
+        "highCeilingDiningrooms": "One or more dining rooms have ceiling higher than 108 inches",
+        "highCeilingKitchens": "One or more kitchens have ceiling higher than 108 inches",
+        "primaryBathroomDualSinks": "Primary bathroom has two or more sinks",
+        "outdoorLivingSpace": "There is a deck, patio, terrace or veranda for outdoor living",
+        "coveredOutdoorLivingSpace": "There is a porch, covered deck, covered patio or covered terrace for outdoor living",
+        "upperFloorLaundry": "There is one or multiple laundry rooms on second or higher floor",
+        "upperFloorBathroom": "There is one or multiple bathrooms on second or higher floor"
+    }
+}
