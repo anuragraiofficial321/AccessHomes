@@ -61,3 +61,40 @@ def get_intrinsics_from_meta(meta_entry):
                 K_img_h = try_int(raw[key]); break
 
     return (float(fx), float(fy), float(cx), float(cy), K_img_w, K_img_h)
+
+#-------------------------Calculating the real-world size of an object from its bounding box and depth-------------------------#
+def compute_real_size_from_bbox(bbox_xyxy, depth_val, intrinsics_tuple, frame_size=None):
+    """
+    Compute real-world width & height (in meters) of an object bounding box.
+
+    bbox_xyxy: [x1,y1,x2,y2] in pixels
+    depth_val: estimated object depth (meters) from ZoeDepth/ARKit
+    intrinsics_tuple: (fx, fy, cx, cy, img_w, img_h) from get_intrinsics_from_meta
+    frame_size: (w,h) of current video frame
+    """
+    if intrinsics_tuple is None or depth_val is None:
+        return None, None
+
+    fx, fy, cx, cy, K_w, K_h = intrinsics_tuple
+    if frame_size is not None and K_w is not None and K_h is not None:
+        fw, fh = frame_size
+        if fw != K_w or fh != K_h:
+            sx = float(fw) / float(K_w); sy = float(fh) / float(K_h)
+            fx, fy, cx, cy = fx * sx, fy * sy, cx * sx, cy * sy
+
+    x1, y1, x2, y2 = bbox_xyxy
+    # left/right center points at object depth
+    uL, uR = x1, x2
+    vC = (y1 + y2) * 0.5
+    Xl = (uL - cx) / fx * depth_val
+    Xr = (uR - cx) / fx * depth_val
+    width_m = abs(Xr - Xl)
+
+    # top/bottom center points
+    uC = (x1 + x2) * 0.5
+    vT, vB = y1, y2
+    Yt = (vT - cy) / fy * depth_val
+    Yb = (vB - cy) / fy * depth_val
+    height_m = abs(Yb - Yt)
+
+    return width_m, height_m

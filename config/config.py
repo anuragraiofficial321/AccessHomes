@@ -20,13 +20,15 @@ OUT_REPRO_CSV = OUT_DATA_DIR / "reproject_debug.csv"
 
 YOLO_MODEL = "models/yolo11m.pt"
 YOLO_DEVICE = "cpu"
-YOLO_CONF = 0.90
+YOLO_CONF = 0.70
 YOLO_IOU = 0.45
 
 ZOE_MODEL_NAME = "Intel/zoedepth-nyu-kitti"
 ZOE_DEVICE = "cuda" if hasattr(cv2, "cuda") and cv2.cuda.getCudaEnabledDeviceCount() > 0 else "cpu"
 
-TARGET_CLASSES = ["sink"]
+TARGET_CLASSES = ["couch","sink","chair","bed","tv"]
+CLASS_IMAGE_JSON = "class_image.json"  # edit if needed
+
 # person", "bed", "chair","sink","refrigerator","toilet","tv","couch"
 
 PROJECTION = "x,-z"
@@ -38,3 +40,5 @@ CONTROL_POINTS = []
 DEBUG_REPROJECT = True
 SAVE_DETECTED_CROPS = True
 VERBOSE = False
+
+

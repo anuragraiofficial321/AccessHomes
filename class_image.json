@@ -1,0 +1,45 @@
+{
+    "couch": {
+      "path": "objects_png/couch.png",
+      "width": 0.09,
+      "height": 0.03,
+      "rotate": false
+    },
+    "chair": {
+      "path": "objects_png/chair.png",
+      "width": 0.05,
+      "height": 0.03,
+      "rotate": false
+    }
+    ,"tv": {
+      "path": "objects_png/tv.png",
+      "width": 0.06,
+      "height": 0.04,
+      "rotate": false
+    },
+    "sink": {
+      "path": "objects_png/sink.png",
+      "width": 0.04,
+      "height": 0.03,
+      "rotate": false
+    },
+    "bed": {
+      "path": "objects_png/bed.png",
+      "width": 0.1,
+      "height": 0.06,
+      "rotate": false
+    },
+    "person": {
+      "path": "objects_png/person.png",
+      "width": 0.02,
+      "height": 0.05,
+      "rotate": false
+    },
+    "refrigerator": {
+      "path": "objects_png/refrigerator.png",
+      "width": 0.04,
+      "height": 0.07,
+      "rotate": false
+    }
+}
+  

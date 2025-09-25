@@ -12,7 +12,7 @@ from config.config import (
     YOLO_MODEL, YOLO_DEVICE, YOLO_CONF, YOLO_IOU,
     ZOE_MODEL_NAME, ZOE_DEVICE,
     TARGET_CLASSES, PROJECTION, CONVERT_M_TO_FT, M_TO_FT,
-    CONTROL_POINTS, DEBUG_REPROJECT, SAVE_DETECTED_CROPS,VERBOSE
+    CONTROL_POINTS, DEBUG_REPROJECT, SAVE_DETECTED_CROPS,VERBOSE, CLASS_IMAGE_JSON
 )
 
 # utils & modules
@@ -28,7 +28,7 @@ from detectors.zoe_depth import init_zoe, get_zoe_depth_map
 from floor.floor_loader import load_floor_polygons, load_fixed_furniture
 from floor.plotter import plot_floorplan
 
-from video.video_processing import process_video_first_per_class, build_arkit_frame_index_map,process_video_all_detections
+from video.video_processing import process_video_first_per_class
 
 import cv2
 import math
@@ -202,6 +202,48 @@ def compute_object_world_and_mapped(cam_pos3d, cam_rot, intrinsics_tuple, bbox_x
         print("compute_object_world_and_mapped (improved) error:", e)
         return None, None, None, None
 
+
+#----------------- Original compute_object_world_and_mapped (commented out)-------------
+
+# def compute_object_world_and_mapped(cam_pos3d, cam_rot, intrinsics_tuple, bbox_xyxy, depth_val,
+#                                    chosen_proj, s_map, R_map, t_map, frame_size=None, z_sign=1.0):
+#     try:
+#         if cam_pos3d is None or cam_rot is None or depth_val is None:
+#             return None, None, None, None
+#         x1, y1, x2, y2 = bbox_xyxy
+#         u = (x1 + x2) * 0.5; v = (y1 + y2) * 0.5
+#         if intrinsics_tuple is None:
+#             fw, fh = (frame_size if frame_size is not None else (640, 480))
+#             fx = fy = 0.8 * max(fw, fh); cx = fw / 2.0; cy = fh / 2.0
+#         else:
+#             fx, fy, cx, cy, K_img_w, K_img_h = intrinsics_tuple
+#             if frame_size is not None and K_img_w is not None and K_img_h is not None:
+#                 frame_w, frame_h = frame_size
+#                 try:
+#                     K_w = int(K_img_w); K_h = int(K_img_h)
+#                 except Exception:
+#                     K_w = None; K_h = None
+#                 if K_w is not None and K_h is not None and (K_w != frame_w or K_h != frame_h):
+#                     sx = float(frame_w) / float(K_w); sy = float(frame_h) / float(K_h)
+#                     fx = fx * sx; fy = fy * sy; cx = cx * sx; cy = cy * sy
+#         d_cam = np.array([(u - cx) / fx, (v - cy) / fy, float(z_sign)], dtype=float)
+#         n = np.linalg.norm(d_cam)
+#         d_cam_n = d_cam / n if n != 0 else d_cam
+#         R = np.array(cam_rot, dtype=float)
+#         d_world = R @ d_cam_n
+#         d_world_norm = np.linalg.norm(d_world)
+#         if d_world_norm == 0:
+#             return None, None, None, None
+#         d_world_dir = d_world / d_world_norm
+#         p_obj_world = np.array(cam_pos3d, dtype=float) + float(depth_val) * d_world_dir
+#         obj_proj2 = project_3d_to_2d(p_obj_world.reshape(1, 3), chosen_proj)
+#         obj_mapped = apply_similarity_to_points(obj_proj2, s_map, R_map, t_map)
+#         obj_x = float(obj_mapped[0, 0]); obj_y = float(obj_mapped[0, 1])
+#         yaw_deg = compute_yaw_from_direction(d_world_dir)
+#         return obj_x, obj_y, yaw_deg, p_obj_world
+#     except Exception as e:
+#         logger.exception("compute_object_world_and_mapped error: %s", e)
+#         return None, None, None, None
 
 def compute_yaw_from_direction(d_world_dir):
     dx = float(d_world_dir[0]); dz = float(d_world_dir[2])
@@ -395,12 +437,27 @@ def main():
     # run detection and mapping for first-seen classes
     found_first = {}
     if VIDEO_PATH.exists():
-        found_first = process_video_first_per_class(VIDEO_PATH, detector, meta, mapped_plot, positions3d,
-                                                    s_map, R_map, t_map, chosen_proj,
-                                                    TARGET_CLASSES, save_detected=True,
-                                                    debug_reproject=DEBUG_REPROJECT, reproject_csv=OUT_REPRO_CSV,
-                                                    global_use_transpose=global_use_transpose, global_z_sign=global_z_sign,
-                                                    SAVE_DETECTED_CROPS=SAVE_DETECTED_CROPS, OUT_DEBUG_CSV=OUT_DEBUG_CSV, M_TO_FT=M_TO_FT)
+        found_first = process_video_first_per_class(
+                video_path=VIDEO_PATH,
+                detector=detector,
+                meta=meta,
+                mapped_plot=mapped_plot,
+                positions3d=positions3d,
+                spaces=spaces,                     # include if your function expects it
+                s_map=s_map,
+                R_map=R_map,
+                t_map=t_map,
+                chosen_proj=chosen_proj,
+                target_classes=TARGET_CLASSES,     # explicit: avoids missing-arg errors
+                save_detected=True,
+                debug_reproject=DEBUG_REPROJECT,
+                reproject_csv=OUT_REPRO_CSV,
+                global_use_transpose=global_use_transpose,
+                global_z_sign=global_z_sign,
+                SAVE_DETECTED_CROPS=SAVE_DETECTED_CROPS,
+                OUT_DEBUG_CSV=OUT_DEBUG_CSV,
+                M_TO_FT=M_TO_FT
+            )
         logger.info("First-seen classes collected: %d", len(found_first))
     else:
         logger.info("Video not found at %s -> skipping detection", VIDEO_PATH)
@@ -447,7 +504,7 @@ def main():
 if __name__ == "__main__":
     result = main()
     if result is None:
-        logger.info("Main returned None — exiting.")
+        print("Main returned None — exiting.")
         sys.exit(0)
 
     mapped_plot = result.get("mapped_plot")
@@ -458,22 +515,61 @@ if __name__ == "__main__":
     found_first = result.get("found_first", {})
 
     if spaces is None or floor_min is None or floor_max is None:
-        logger.exception("Missing floor polygons or bounds — cannot plot.")
+        print("Missing floor polygons or bounds — cannot plot.")
         sys.exit(0)
 
-    # Save two variants: with emojis and plain
-    try:
-        plot_floorplan(found_first, spaces, fixed_furniture, floor_min, floor_max, mapped_plot,
-                       use_emojis=True,
-                       out_path=DATA_DIR / "floor_plan_with_emojis.png",
-                       title=f"Floor plan — first-seen (with emojis) — method {result.get('mapping',{}).get('method','?')}",
-                       VERBOSE=VERBOSE, TARGET_CLASSES=TARGET_CLASSES)
-        plot_floorplan(found_first, spaces, fixed_furniture, floor_min, floor_max, mapped_plot,
-                       use_emojis=False,
-                       out_path=DATA_DIR / "floor_plan_plain.png",
-                       title=f"Floor plan — first-seen (plain) — method {result.get('mapping',{}).get('method','?')}",
-                       VERBOSE=VERBOSE, TARGET_CLASSES=TARGET_CLASSES)
-    except Exception as e:
-        logger.warning("Warning: plotting failed: %s", e)
+    def _validate_class_images(json_path):
+        try:
+            p = Path(json_path)
+            if not p.exists():
+                print(f"PNG mapping JSON not found: {json_path}")
+                return False
+            jm = load_json(json_path)
+            if not isinstance(jm, dict):
+                print("PNG mapping JSON should be an object/dictionary of class->path or class->dict")
+                return False
+            missing = []; not_png = []; invalid = []
+            for k, v in jm.items():
+                if isinstance(v, str):
+                    invalid.append(f"{k}: mapping is string-only; width/height required")
+                    continue
+                if isinstance(v, dict):
+                    pval = v.get("path") or v.get("png") or v.get("file")
+                    if not pval:
+                        invalid.append(f"{k}: missing 'path' in dict")
+                        continue
+                    pth = Path(pval)
+                    if not pth.exists():
+                        missing.append(str(pth))
+                    elif pth.suffix.lower() != ".png":
+                        not_png.append(str(pth))
+                    if v.get("width") is None and v.get("height") is None:
+                        invalid.append(f"{k}: missing width/height in mapping (required)")
+                else:
+                    invalid.append(f"{k}: unsupported mapping type {type(v)}")
+            if invalid:
+                print("PNG mapping has invalid entries:", invalid)
+            if missing:
+                print("PNG mapping contains missing files:", missing)
+            if not_png:
+                print("PNG mapping contains non-PNG files (only .png allowed):", not_png)
+            return (len(missing) == 0 and len(not_png) == 0 and len(invalid) == 0)
+        except Exception as e:
+            print("Validator error:", e)
+            return False
 
-    logger.info("Done.")
+    if not _validate_class_images(CLASS_IMAGE_JSON):
+        print("PNG mapping validation failed. Fix the JSON or image files and rerun.")
+    else:
+        try:
+            plot_floorplan(found_first, spaces, fixed_furniture, floor_min, floor_max, mapped_plot,
+                           out_path=DATA_DIR / "floor_plan_with_pngs.png",
+                           title=f"Floor plan — PNG-only — method {result.get('mapping',{}).get('method','?')}",
+                           class_image_json=str(CLASS_IMAGE_JSON),
+                           rotate_icons=True,
+                           remove_white_bg=True,
+                           white_threshold=245)
+        except Exception as e:
+            print("Warning: plotting failed:", e)
+
+    print("Done.")
