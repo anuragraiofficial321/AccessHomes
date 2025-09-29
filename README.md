@@ -1,250 +1,287 @@
-## Overview — what this project does
+# AccessMate
 
-This codebase takes ARKit tracking data + a floor plan + a video and produces:
-
-* **Mapped floor-plan overlays (PNG)** with first-seen object detections plotted on the floor plan.
-
-  * `floor_plan_with_emojis.png` — labels with emoji (if available).
-  * `floor_plan_plain.png` — plain-text labels.
-* **First-seen detections CSV** (rows for the first frame each requested class is detected):
-
-  * `first_seen_detections.csv`
-* **Debug CSVs** (optional, if enabled):
-
-  * `first_seen_detections_debug.csv` — per-detection debug fields (mapping, depths, reprojections).
-  * `reproject_debug.csv` — reprojection u/v and estimated u\_est/v\_est records.
-* **Saved crops & annotated frames** (optional, controlled by config): one image crop per first-seen detection and an annotated video-frame image.
-* **Console log output** describing progress and warnings.
-
-It tries to compute where objects in the camera/video view lie on the 2D floorplan by:
-
-1. extracting camera poses (3D) from ARKit JSON,
-2. projecting camera positions into 2D,
-3. automatically aligning those 2D points to the floor-plan coordinate system,
-4. running an object detector (YOLO) on the video to find objects and the frame where each class is first seen,
-5. estimating object depth (ZoeDepth deep model — or fallback),
-6. raycasting from camera through the bounding-box center using depth to compute the 3D object point,
-7. mapping that 3D point into floor-plan 2D via the previously computed similarity transform, and
-8. plotting results and saving CSVs/images.
+Maps first-seen object detections from a video onto a floor plan using ARKit camera poses and depth estimates. It detects objects with YOLO, estimates depth with ZoeDepth, reprojects detections into world coordinates, enforces room containment, and saves a plotted floor plan with icons and per-detection annotated images.
 
 ---
 
-## Files & layout (what matters)
+# Table of contents
 
-```
-project/
-│─ config/config.py          # paths, models, toggles (edit here)
-│─ main.py                   # entrypoint (runs full pipeline)
-│─ detectors/zoe_depth.py    # Zoe wrapper (depth estimation)
-│─ detectors/yolo_detector.py# YOLO detection wrapper
-│─ utils/*.py                # parsing, projection, intrinsics helpers
-│─ video/video_processing.py # detection -> depth -> world mapping logic
-│─ floor/floor_loader.py     # load polygons + fixed furniture
-│─ floor/plotter.py          # plotting / PNG saving
-```
-
-You asked not to change algorithmic logic; the split keeps original behavior.
+1. [Prerequisites](#prerequisites)
+2. [Repository layout (visual)](#repository-layout-visual)
+3. [Quick start — run pipeline](#quick-start---run-pipeline)
+4. [Configuration (what to edit)](#configuration-what-to-edit)
+5. [Detailed explanation of outputs](#detailed-explanation-of-outputs)
+6. [How the pipeline works (step-by-step)](#how-the-pipeline-works-step-by-step)
+7. [Troubleshooting & common issues](#troubleshooting--common-issues)
+8. [Extending / customizing](#extending--customizing)
+9. [Example commands and expected outputs](#example-commands-and-expected-outputs)
+10. [Requirements / `requirements.txt`](#requirements--requirementstxt)
 
 ---
 
-## Config you will edit
+# Prerequisites
 
-`config/config.py` contains these important values:
+* Python 3.9+ (3.10 recommended). Virtualenv/venv strongly recommended.
+* Enough disk space for models (YOLO weights and transformer models if used).
+* Recommended CPU / GPU for performance:
 
-* `DATA_DIR`, `ARKIT_PATH`, `FLOOR_PATH`, `VIDEO_PATH` — input/output file paths.
-* `YOLO_MODEL`, `YOLO_DEVICE`, `YOLO_CONF`, `YOLO_IOU` — YOLO detector config.
-* `ZOE_MODEL_NAME`, `ZOE_DEVICE` — Zoe model id or local checkpoint and device.
-* `TARGET_CLASSES` — classes to collect (first-seen). Example: `["couch","person","bed","chair"]`.
-* `PROJECTION` — which axes to use for map projection (default `"x,-z"`).
-* `CONTROL_POINTS` — optional exact (frame\_index, floor\_x, floor\_y) pairs for Umeyama alignment.
-* Debug toggles: `DEBUG_REPROJECT`, `SAVE_DETECTED_CROPS`, `VERBOSE`.
+  * CPU-only works but may be slow for Zoe and YOLO inference.
+  * GPU recommended for Zoe (`torch` + CUDA) and Ultraytics YOLO if you have NVIDIA GPU.
 
-Edit those paths and values to match your files.
+Install system packages first (on Ubuntu example):
 
----
-
-## High-level pipeline (diagram)
-
-Mermaid (if your viewer supports it):
-
-```mermaid
-flowchart LR
-  A[arkitData.json] --> B[extract_positions_list()]
-  B --> C[project_3d_to_2d]
-  C --> D[auto_map_and_choose / Umeyama]
-  D --> E[mapped_plot (2D cam positions)]
-  F[floor_plan.json] --> G[load_floor_polygons()]
-  G --> D
-  H[video.mp4] --> I[YoloDetector.detect_frame()]
-  I --> J[process_video_first_per_class]
-  E --> J
-  G --> J
-  J --> K[zoe_depth.get_zoe_depth_map() or fallback]
-  K --> L[compute_object_world_and_mapped()]
-  L --> M[first_seen_detections.csv + debug CSVs]
-  M --> N[plot_floorplan() -> PNGs]
-```
-
-ASCII alternative:
-
-```
-arkitData.json --(poses)--> projection/mapping ----\
-                                                      \
-                                                       -> process_video (YOLO + Zoe) -> world positions -> CSVs -> PNG
-floor_plan.json --(polygons)--> mapping --------------/
-video.mp4 --(YOLO)--> detection frames --(Zoe)--> depth -> reprojection -> mapping
-```
-
----
-
-## Practical step-by-step run
-
-1. Prepare inputs:
-
-   * `arkitData.json` (ARKit export).
-   * `floor_plan.json` (floor plan GeoJSON-style used by the script).
-   * `video.mp4` (recorded video aligned to ARKit frames).
-
-2. Edit `config/config.py`:
-
-   * Set `DATA_DIR` to the folder containing the three inputs (or adjust ARKIT\_PATH / FLOOR\_PATH / VIDEO\_PATH individually).
-   * Ensure `YOLO_MODEL` path points to your weights (or leave — YOLO will print an error if missing).
-   * Choose `ZOE_MODEL_NAME` or keep default. If using CPU, set `ZOE_DEVICE='cpu'`.
-
-3. (Optional) Create a Python venv and install dependencies:
+### Create & activate venv:
 
 ```bash
 python3 -m venv venv
 source venv/bin/activate
-pip install -U pip
-pip install numpy pandas matplotlib opencv-python ultralytics transformers torch torchvision pillow
-# if GPU desired, install a torch matching your CUDA (see pytorch.org)
 ```
 
-4. Run:
+Install Python dependencies (see `requirements.txt` bottom of this README):
 
 ```bash
-python3 main.py
+pip install -r requirements.txt
 ```
 
-5. Check outputs (in `DATA_DIR` or `input_data` depending on config):
+**Optional** for ZoeDepth GPU acceleration:
 
-   * `first_seen_detections.csv`
-   * `first_seen_detections_debug.csv` (if debug saved)
-   * `reproject_debug.csv` (if debug saved)
-   * `floor_plan_with_emojis.png`, `floor_plan_plain.png`
-   * saved crops like `first_person_vf12.jpg` and annotated frames `annotated_first_vf*.jpg`
+* Install a CUDA-compatible PyTorch per your CUDA version (`pip` or `conda`) — visit PyTorch site for the right command.
+* Then reinstall `transformers` and `accelerate` into the same venv if needed.
 
 ---
 
-## What each output field means (CSV)
+# Quick start — run pipeline
 
-`first_seen_detections.csv` (columns):
+1. Put your inputs into `input_data/`:
 
-* `class`: detected class name from YOLO (e.g., `person`).
-* `video_frame_index`: index in the video where class first seen.
-* `arkit_index`: matched ARKit frame index used for pose.
-* `cam_mapped_x`, `cam_mapped_y`: mapped camera 2D coordinates (on floorplan).
-* `object_mapped_x`, `object_mapped_y`: mapped object position (on floorplan) — may be `null` if depth missing.
-* `object_yaw_deg`: estimated object yaw (facing angle) in degrees (optional).
-* `conf`: detector confidence.
-* `crop_path`: file path to saved crop image (if saved).
-* `annotated_frame`: saved annotated frame path.
-* `depth_model_units`: raw depth units from Zoe (model-specific).
-* `distance_m`: depth in meters (or `null` if missing).
-* `distance_ft`: depth in feet (if conversion enabled).
+   * `arkitData.json` — ARKit or iOS recording metadata containing camera transforms (required).
+   * `floor_plan.json` — floor plan JSON (required).
+   * `video.mp4` — video file used for detection (optional — if missing, detection is skipped).
 
-`first_seen_detections_debug.csv` (verbose): per detection debug rows used to analyze reprojection errors, camera pose, mapped coords, orientation confidence.
+2. Edit `config/config.py` if your input paths differ:
 
-`reproject_debug.csv`: records of actual image u,v and estimated u\_est,v\_est from reprojection for diagnostics.
+   * `DATA_DIR`, `ARKIT_PATH`, `FLOOR_PATH`, `VIDEO_PATH`
+   * `YOLO_MODEL` path (if you use a custom model)
+   * `TARGET_CLASSES` (list of classes to collect first-seen frames)
 
----
+3. Run:
 
-## ZoeDepth issues & troubleshooting (common)
-
-You experienced:
-
-```
-Attempting to cast a BatchFeature to type None. This is not supported.
+```bash
+source venv/bin/activate
+python main.py
 ```
 
-**Why**: mismatch between the processor saved with the model (its config) and your `transformers` version or `AutoImageProcessor` expectations (list vs single-image; `use_fast` availability; device issues).
-
-**Fixes** (we already provided a hardened wrapper):
-
-1. Use the new `detectors/zoe_depth.py` (this repo contains it) — it:
-
-   * tries `AutoImageProcessor(..., use_fast=True)` but falls back.
-   * tries both `processor(image)` and `processor([image])`.
-   * moves tensors to the selected device.
-   * returns clear errors if Zoe cannot produce depths.
-
-2. If Zoe still fails:
-
-   * ensure `transformers` and `torch` versions are reasonably recent:
-
-     ```bash
-     pip install -U transformers torch
-     ```
-
-     (or pick a torch wheel compatible with your GPU driver)
-   * set `ZOE_DEVICE = 'cpu'` in `config/config.py` to avoid GPU-driver mismatch during testing.
-   * pass a local model checkpoint that matches your `transformers` version.
-
-3. Pipeline fallback:
-
-   * When Zoe fails for a frame, a simple heuristic (`estimate_depth_fallback`) computes an approximate depth from bounding-box height so the pipeline can still compute world coordinates. This lets you get mapped outputs even if Zoe is unavailable — less accurate, but better than nothing.
+Outputs appear in `output_data/`. See “Detailed explanation of outputs” below.
 
 ---
 
-## YOLO & emoji notes
+# Configuration (what to edit)
 
-* YOLO (ultralytics) prints model summary on load. If YOLO fails to init, `main.py` returns early — install `ultralytics` and provide weights.
-* Emoji labels in PNG are used only if an emoji-capable font is found. If not, the script prints:
+Primary config: `config/config.py`
+Key variables and what they do:
 
-  ```
-  plot_floorplan: no emoji font found on system — falling back to plain labels
-  ```
+* `DATA_DIR`: base input directory (default `input_data`).
+* `ARKIT_PATH`: path to ARKit JSON (default `input_data/arkitData.json`).
+* `FLOOR_PATH`: path to floor plan JSON.
+* `VIDEO_PATH`: path to video file.
+* `OUT_DATA_DIR`: directory where outputs will be saved.
+* `YOLO_MODEL`: path to YOLO weights (ultralytics `.pt`).
+* `YOLO_DEVICE`: `"cpu"` or `"cuda:0"` (if using GPU).
+* `ZOE_MODEL_NAME`: Hugging Face model name for ZoeDepth.
+* `ZOE_DEVICE`: `"cpu"` or `"cuda"`.
+* `TARGET_CLASSES`: list of classes (strings) to collect first-seen images for.
+* `CLASS_IMAGE_JSON`: path to `class_image.json` used by plotter to place PNG icons.
 
----
-
-## Example logs and what they indicate
-
-* `Extracted 2380 frames` — ARKit parsing succeeded; positions count = number of camera transforms.
-* `proj x,z -> score 2082` — automatic mapping tried multiple projections and chose the highest score (points inside polygons).
-* `Global orientation chosen by majority vote: use_transpose=False global_z_sign=-1.0` — script selected camera-rotation orientation direction and sign by voting over frames.
-* `Zoe model loaded: Intel/zoedepth-nyu-kitti on cpu` — Zoe loaded and device set.
-* `Warning: ZoeDepth failed for vf 1 -> ...` — Zoe failing for a frame; fallback used, or depth becomes None (check CSV).
-* `DETECTED-START: person vf12 cam=(384.8,403.3) obj=(N/A,N/A) dist=N/A` — YOLO detected a class but object world could not be computed (depth missing). If fallback depths are used, `obj` and `dist` will be filled.
-
----
-
-## If object mapped\_x/mapped\_y are `N/A` — check:
-
-1. Was Zoe depth available and non-NaN for that frame? If not, `object_x/object_y` will be `null`.
-2. Camera pose (ARKit) must include rotation (`rot`) or a 4x4/3x4 matrix for orientation; missing rotation can prevent raycast.
-3. Intrinsics: if ARKit metadata includes camera intrinsics they will be used for reprojection; otherwise a fallback assumed intrinsics are used — results may be poorer.
-4. If you want deterministic mapping improvements, provide `CONTROL_POINTS` (2 or more known correspondences). That triggers exact Umeyama similarity.
+Important: don’t change function signatures or logic unless you know what you’re doing. The refactor preserved interfaces so `main.py` can call the modules.
 
 ---
 
-## Quick tips for reproducible results
+# Detailed explanation of outputs
 
-* Ensure ARKit and video frames are roughly synchronized. `frameNumber` matching in ARKit -> video frame index mapping is attempted; if missing, nearest frame is used.
-* Provide camera intrinsics (width/height + fx/fy/cx/cy) in ARKit metadata for better reprojection accuracy.
-* For improved depth:
+All outputs are saved in `output_data/`. Important files:
 
-  * Install `torch` and a GPU driver compatible with your GPU + CUDA and pick `ZOE_DEVICE='cuda'`.
-  * Or run Zoe on CPU (slower) but more likely to work without driver problems: set `ZOE_DEVICE='cpu'`.
+* `output_data/first_seen_detections.csv`
+  CSV of all accepted (first-seen) detections. Columns include:
+
+  * `class`: human class name (e.g., "sink")
+  * `video_frame_index`: frame in the video where detected
+  * `arkit_index`: matching ARKit frame index used for mapping
+  * `cam_mapped_x`, `cam_mapped_y`: mapped camera floor coordinates
+  * `object_mapped_x`, `object_mapped_y`: mapped object coordinates on floor plan
+  * `object_yaw_deg`: estimated yaw angle (camera-relative)
+  * `conf`: detection confidence
+  * `distance_m`, `distance_ft`: depth measured by Zoe (meters / feet)
+
+* `output_data/first_seen_detections_debug.csv`
+  Per-detection debugging info (if available), including reprojection residuals.
+
+* `output_data/reproject_debug.csv`
+  Reprojection debug info saved if `DEBUG_REPROJECT` is enabled.
+
+* `output_data/annotated_frames/`
+  Per-detection full-frame images with bounding box + class label. Filenames:
+  `vf{video_frame}_arkit{arkit}_{class}.jpg`
+
+* `output_data/accepted_frames/`
+  Visuals of accepted detections (bolder bbox + "ACCEPTED" banner). Filenames:
+  `vf{video_frame}_arkit{arkit}_{class}_ACCEPT.jpg`
+  The path to the accepted frame is stored for accepted detections in the `annotated_frame` field inside the detection info (and can be exported to CSV).
+
+* `output_data/floor_plan_with_pngs.png`
+  Floor plan plot with colored rooms and placed PNG icons for accepted detections.
 
 ---
 
-## Where to tweak behavior (files)
+# How the pipeline works (step-by-step)
 
-* `config/config.py` — change paths, devices, classes, debug toggles.
-* `detectors/zoe_depth.py` — change fallback heuristic parameters (`near_depth`, `far_depth`).
-* `video/video_processing.py` — you can change how first-seen frames are chosen (mapping strategy, saved outputs).
-* `floor/plotter.py` — change plotting style, marker sizes, label offsets.
+1. **Load ARKit positions (`arkitData.json`)**
+
+   * `main.py` -> `extract_positions_list()` parses camera transform matrices or x/y entries into `positions3d` and `meta`.
+
+2. **Project 3D -> 2D**
+
+   * `project_3d_to_2d()` converts `positions3d` to 2D (various projections supported).
+
+3. **Load floor polygons**
+
+   * `floor/floor_loader.py` reads `floor_plan.json` and extracts room polygons (`spaces`) and fixed furniture.
+
+4. **Auto-map cameras onto floor**
+
+   * Try multiple candidate projections and choose one that maximizes the number of camera positions falling inside rooms (heuristic).
+   * Compute a 2D similarity (Umeyama) to align camera 2D track to floor coordinates.
+
+5. **Initialize detectors**
+
+   * YOLO via `detectors/yolo_detector.py` (requires `ultralytics`).
+   * ZoeDepth via `detectors/zoe_depth.py` (optional; requires `transformers` + `torch`).
+
+6. **Process video frames** (`process_video_first_per_class`)
+
+   * For each frame, detect objects with YOLO.
+   * For each detection, get depth from ZoeDepth (median patch of depth around bbox center).
+   * Reproject object into world coordinates using camera pose and depth (`compute_object_world_and_mapped`) and map to floor coordinates.
+   * **Room containment check:** ensure object and camera map into the same room polygon (with tolerance `room_margin`).
+
+     * If allowed, nudge the mapped point inside room for better icon placement (`inside_push` distance).
+   * If `save_detected=True`, save:
+
+     * annotated full-frame image under `output_data/annotated_frames/`
+     * if accepted (passes room check), save accepted-frame under `output_data/accepted_frames/` and attach path in detection info.
+
+7. **Save CSVs & plot**
+
+   * Save `first_seen_detections.csv` and plot floor plan via `floor/plotter.py`.
 
 ---
 
+# Troubleshooting & common issues
+
+* **`ultralytics.YOLO not available`**
+
+  * Install via `pip install ultralytics`. Optionally ensure CUDA GPU support if desired.
+
+* **ZoeDepth import errors (`transformers` / `torch`)**
+
+  * Install `pip install torch transformers accelerate pillow`. If using GPU, install the correct `torch` wheel for your CUDA version.
+
+* **`arkitData.json` missing or no camera transforms found**
+
+  * Ensure `arkitData.json` contains camera transform matrices or `x`/`y` values. The extractor looks for `cameraTransform`, `transform`, `matrix`, or `x/y` pairs.
+
+* **No detections saved**
+
+  * Check `TARGET_CLASSES` in `config/config.py`. Make sure YOLO classes match expected names (you can print YOLO `model.names` to see class mapping).
+  * Lower `YOLO_CONF` if too strict.
+
+* **Annotated frames not saved**
+
+  * Ensure `save_detected=True` is passed to `process_video_first_per_class` (default in `main.py` uses `True`) and program has write permission to `output_data/`.
+
+* **Plot icons not visible or wrong scale**
+
+  * Check `class_image.json` entries: each mapping should include `path` and ideally `width`/`height` in floor units. If missing, icons fall back to pixel size with a minimum.
+
+* **ZoeDepth very slow**
+
+  * Use GPU if available. Zoe model may be heavy; pre-infer or cache depth maps if re-running.
+
+---
+
+# Extending / customizing
+
+* **Change classes to collect**: edit `TARGET_CLASSES` in `config/config.py`.
+* **Change room margin or inside push**: when calling `process_video_first_per_class` in `main.py`, tune `room_margin` (units are same as floor plan) and `inside_push` (push mapped point inside polygon by X units).
+* **Save crop images**: add a small snippet in `video/video_processing.py` where detection happens to crop `frame[y1:y2, x1:x2]` and save.
+* **Use different YOLO weights**: place weights in `models/` and set `YOLO_MODEL` accordingly.
+* **Export saved file paths to CSV**: add `annotated_frame` and file path columns when writing `first_seen_detections.csv` in `main.py`.
+
+---
+
+# Example commands and expected outputs
+
+Run full pipeline (example):
+
+```bash
+# inside virtualenv
+python main.py
+```
+
+Expected console output (abridged):
+
+```
+Loading and extracting ARKit positions...
+Extracted 512 frames (3D positions).
+No control points provided — using automatic mapping heuristic.
+proj x,-z -> score 350 ...
+Auto-chosen projection: x,-z rotation: 0.0 score: 350
+Initializing YOLO detector (this may load weights and take a moment)...
+Video opened: input_data/video.mp4, frames: 1800 size: 1280x720
+DETECTED-ACCEPT: sink vf123 cam=(12.3,45.6) obj=(13.1,44.8) dist=2.345m ...
+Saved reproject debug CSV: output_data/reproject_debug.csv
+Saved per-detection debug CSV: output_data/first_seen_detections_debug.csv
+Saved detections CSV: output_data/first_seen_detections.csv
+Saved overlay image: output_data/floor_plan_with_pngs.png
+Done.
+```
+
+Open this folder to view:
+
+* `output_data/annotated_frames/` — many images (each detection)
+* `output_data/accepted_frames/` — the accepted ones you care about
+* `output_data/floor_plan_with_pngs.png` — final floorplan view
+
+---
+
+# Requirements (`requirements.txt`)
+
+Save this as `requirements.txt` in project root and install with `pip install -r requirements.txt`.
+
+```
+numpy>=1.22
+pandas>=1.3
+matplotlib>=3.4
+opencv-python>=4.5
+ultralytics>=8.0   # optional; required for YOLO detection
+transformers>=4.30 # optional; required for ZoeDepth
+torch              # optional; install the correct wheel for your CUDA/CPU
+accelerate>=0.20   # optional; for transformers acceleration
+Pillow>=9.0
+```
+
+**Note:** Installing `torch` should typically be done following the official instructions for your platform (CUDA or CPU). Example for CPU-only:
+
+```bash
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+```
+
+---
+
+# Final tips & checklist
+
+* Prepare `input_data/arkitData.json` and `input_data/floor_plan.json` first. The script cannot run mapping without floor polygons.
+* If you don't have Zoe or YOLO available, the pipeline will print warnings and exit gracefully (it requires YOLO to produce detections in the current main pipeline).
+* Use small sample video & model to test quickly before running a long video.
+* Keep `class_image.json` icons and `models/` weights in the repo or point paths in `config/config.py`.
+
+---
