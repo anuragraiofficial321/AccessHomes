@@ -1,4 +1,7 @@
-#!/usr/bin/env python3
+"""
+Matrix parsing and Umeyama similarity helper functions.
+"""
+
 import numpy as np
 
 def parse_homogeneous_matrix(raw):
@@ -46,3 +49,42 @@ def parse_homogeneous_matrix(raw):
         pass
 
     return t.astype(float), R.astype(float)
+
+def umeyama_2d(src, dst, with_scaling=True):
+    src = np.array(src, dtype=float); dst = np.array(dst, dtype=float)
+    assert src.shape == dst.shape and src.shape[1] == 2
+    N = src.shape[0]
+    mu_src = src.mean(axis=0); mu_dst = dst.mean(axis=0)
+    src_c = src - mu_src; dst_c = dst - mu_dst
+    cov = (dst_c.T @ src_c) / N
+    U, D, Vt = np.linalg.svd(cov)
+    S = np.eye(2)
+    if np.linalg.det(U) * np.linalg.det(Vt) < 0:
+        S[1, 1] = -1
+    R = U @ S @ Vt
+    if with_scaling:
+        var_src = (src_c**2).sum() / N
+        s = 1.0 / var_src * np.trace(np.diag(D) @ S)
+    else:
+        s = 1.0
+    t = mu_dst - s * R @ mu_src
+    return s, R, t
+
+def apply_similarity_to_points(points2d, s, R, t):
+    pts = np.array(points2d, dtype=float)
+    return (s * (R @ pts.T)).T + t
+
+def interp_missing(mapped):
+    m = np.array(mapped, dtype=float).copy()
+    n = m.shape[0]
+    if n == 0: return m
+    for dim in (0, 1):
+        arr = m[:, dim]; isn = np.isnan(arr)
+        if isn.any():
+            good_idx = np.where(~isn)[0]
+            if good_idx.size > 0:
+                interp_all = np.interp(np.arange(n), good_idx, arr[good_idx])
+                m[:, dim] = interp_all
+            else:
+                m[:, dim] = 0.0
+    return m

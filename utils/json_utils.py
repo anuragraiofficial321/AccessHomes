@@ -1,7 +1,12 @@
-#!/usr/bin/env python3
+"""
+Simple JSON helpers used by the pipeline.
+"""
+
 import json
+from pathlib import Path
 
 def load_json(path):
+    path = Path(path)
     with open(path, "r") as f:
         return json.load(f)
 
@@ -16,3 +21,4 @@ def find_dicts_with_key(obj, key):
         for it in obj:
             out += find_dicts_with_key(it, key)
     return out
+

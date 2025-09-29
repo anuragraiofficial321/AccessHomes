@@ -1,46 +1,27 @@
 #!/usr/bin/env python3
+"""
+Entry point that wires everything together. Behavior preserved from the original monolithic script.
+"""
+
 import sys
 from pathlib import Path
-from config import logger
 import numpy as np
 import pandas as pd
-
-# config
-from config.config import (
-    DATA_DIR, ARKIT_PATH, FLOOR_PATH, VIDEO_PATH,
-    OUT_PNG, OUT_CSV, OUT_DEBUG_CSV, OUT_REPRO_CSV,
-    YOLO_MODEL, YOLO_DEVICE, YOLO_CONF, YOLO_IOU,
-    ZOE_MODEL_NAME, ZOE_DEVICE,
-    TARGET_CLASSES, PROJECTION, CONVERT_M_TO_FT, M_TO_FT,
-    CONTROL_POINTS, DEBUG_REPROJECT, SAVE_DETECTED_CROPS,VERBOSE, CLASS_IMAGE_JSON
-)
-
-# utils & modules
+from config.config import *
+from config.logger import setup_logger
 from utils.json_utils import load_json, find_dicts_with_key
-from utils.matrix_utils import parse_homogeneous_matrix
-from utils.projection_utils import project_3d_to_2d, umeyama_2d, apply_similarity_to_points, interp_missing, auto_map_and_choose, count_points_inside_polygons
-from utils.orientation_utils import choose_best_rotation_and_sign
-from utils.intrinsics_utils import get_intrinsics_from_meta
-
-from detectors.yolo_detector import YoloDetector
-from detectors.zoe_depth import init_zoe, get_zoe_depth_map
-
+from utils.matrix_utils import parse_homogeneous_matrix, umeyama_2d, apply_similarity_to_points, interp_missing
+from utils.projection_utils import project_3d_to_2d, auto_map_and_choose, count_points_inside_polygons
 from floor.floor_loader import load_floor_polygons, load_fixed_furniture
+from video.video_processing import process_video_first_per_class, build_arkit_frame_index_map
+from detectors.yolo_detector import YoloDetector
+from detectors.zoe_depth import init_zoe, ZoeDepthForDepthEstimation
 from floor.plotter import plot_floorplan
 
-from video.video_processing import process_video_first_per_class
+logger = setup_logger()
 
-import cv2
-import math
-import os
-
-
-#---------------Setup Logger-----------------
-logger = logger.setup_logger()
-
-# ----------------- ARKit extraction-----------------
-def extract_positions_list():
-    ark = load_json(ARKIT_PATH)
+def extract_positions_list(arkit_path):
+    ark = load_json(arkit_path)
     cand_dicts = find_dicts_with_key(ark, "cameraTransform")
     if not cand_dicts:
         cand_dicts = find_dicts_with_key(ark, "transform") + find_dicts_with_key(ark, "matrix") + find_dicts_with_key(ark, "camera_transform")
@@ -77,288 +58,14 @@ def extract_positions_list():
             entries = [{"pos": it["pos"], "rot": None, "method": "xy_direct", "raw": None, "frameNumber": None, "frameTimestamp": None} for it in ark_xy]
 
     if not entries:
-        logger.exception("No camera transforms or x/y data found in arkitData.json")
         raise RuntimeError("No camera transforms or x/y data found in arkitData.json")
 
     positions = np.vstack([e["pos"] for e in entries])
     meta = [{"frameNumber": e.get("frameNumber"), "frameTimestamp": e.get("frameTimestamp"),
              "method": e.get("method"), "raw": e.get("raw"), "rot": e.get("rot")} for e in entries]
-    logger.debug("ARKit Meta Data:",meta)
     return positions, meta
 
-# ----------------- compute_object_world_and_mapped (kept inline) -----------------
-# Overwrite compute_object_world_and_mapped with improved version
-def compute_object_world_and_mapped(cam_pos3d, cam_rot, intrinsics_tuple, bbox_xyxy, depth_val,
-                                   chosen_proj, s_map, R_map, t_map, frame_size=None, z_sign=1.0):
-    """
-    Improved compute: uses bbox bottom-center, chooses orientation via reprojection,
-    and refines depth by 1D search to minimize reprojection error. Returns (obj_x,obj_y,yaw,p_world)
-    """
-    try:
-        if cam_pos3d is None:
-            return None, None, None, None
-
-        # Choose image point: bottom-center (contact point). If you want center, switch to midpoint.
-        x1, y1, x2, y2 = bbox_xyxy
-        # bottom-center: u = (x1+x2)/2, v = y2 (bottom)
-        u_img = (x1 + x2) * 0.5
-        v_img = float(y2)  # bottom of bbox
-
-        frame_w, frame_h = (frame_size if frame_size is not None else (None, None))
-        # Use intrinsics rescaling helper if available (optional)
-        intr_for_use = intrinsics_tuple
-        # If intrinsics provided, keep them; the reprojection helpers rescale internally when needed
-
-        # If a coarse depth_val provided (from Zoe), use it as a starting guess
-        depth_guess = depth_val if (depth_val is not None and depth_val > 0) else None
-
-        # Choose orientation and z_sign by trying combinations and pick one with smallest reproj error at depth_guess
-        if cam_rot is None:
-            return None, None, None, None
-
-        # try combinations
-        from utils.reprojection_utils import choose_best_orientation_by_reproj, depth_refine_binary_search, reproject_point_world_to_image
-        best_R, best_z, _, _ = choose_best_orientation_by_reproj(cam_pos3d, cam_rot, intr_for_use, (x1,y1,x2,y2), depth_guess, (frame_w, frame_h))
-        if best_R is None:
-            # fallback to supplied cam_rot and z_sign
-            chosen_R = cam_rot
-            chosen_z = z_sign
-        else:
-            chosen_R = best_R
-            chosen_z = best_z
-
-        # refine depth: search between small and large distances
-        d_min = 0.3; d_max = 10.0
-        if depth_guess is not None:
-            # narrow search around guess
-            d_min = max(0.1, depth_guess * 0.5); d_max = max(depth_guess * 1.5, d_min + 0.1)
-
-        best_depth, best_err, p_world = depth_refine_binary_search(cam_pos3d, chosen_R, intr_for_use, (x1,y1,x2,y2), (frame_w, frame_h), z_sign=chosen_z, depth_min=d_min, depth_max=d_max, tol=1e-2, max_iter=25)
-
-        if best_depth is None:
-            # fallback: if we had a coarse depth_val use it
-            if depth_guess is not None:
-                best_depth = depth_guess
-                # compute p_world for that depth
-                # replicate logic to compute p_world
-                x1c, y1c, x2c, y2c = x1, y1, x2, y2
-                u = (x1c + x2c) * 0.5; v = y2c
-                if intr_for_use is None:
-                    fw, fh = (frame_w if frame_w is not None else 640, frame_h if frame_h is not None else 480)
-                    fx = fy = 0.8 * max(fw, fh); cx = fw/2.0; cy = fh/2.0
-                else:
-                    fx, fy, cx, cy, K_w, K_h = intr_for_use
-                    if frame_w is not None and K_w is not None and K_h is not None:
-                        try:
-                            K_w_i = int(K_w); K_h_i = int(K_h)
-                        except Exception:
-                            K_w_i = None; K_h_i = None
-                        if K_w_i is not None and K_h_i is not None and (K_w_i != frame_w or K_h_i != frame_h):
-                            sx = float(frame_w) / float(K_w_i); sy = float(frame_h) / float(K_h_i)
-                            fx = fx * sx; fy = fy * sy; cx = cx * sx; cy = cy * sy
-                d_cam = np.array([(u - cx) / fx, (v - cy) / fy, float(chosen_z)], dtype=float)
-                n = np.linalg.norm(d_cam)
-                d_cam_n = d_cam / n if n != 0 else d_cam
-                d_world = chosen_R @ d_cam_n
-                d_world_dir = d_world / (np.linalg.norm(d_world) + 1e-12)
-                p_world = np.array(cam_pos3d, dtype=float) + float(best_depth) * d_world_dir
-
-        # mapped 2D point on floor plan
-        from utils.projection_utils import project_3d_to_2d, apply_similarity_to_points
-        obj_proj2 = project_3d_to_2d(p_world.reshape(1, 3), chosen_proj)
-        obj_mapped = apply_similarity_to_points(obj_proj2, s_map, R_map, t_map)
-        obj_x = float(obj_mapped[0,0]); obj_y = float(obj_mapped[0,1])
-
-        # yaw: compute facing from ray direction
-        d_cam_final = None
-        try:
-            Rmat = np.array(chosen_R, dtype=float)
-            x1c, y1c, x2c, y2c = x1, y1, x2, y2
-            u = (x1c + x2c) * 0.5; v = y2c
-            if intr_for_use is None:
-                fw, fh = (frame_w if frame_w is not None else 640, frame_h if frame_h is not None else 480)
-                fx = fy = 0.8 * max(fw, fh); cx = fw/2.0; cy = fh/2.0
-            else:
-                fx, fy, cx, cy, K_w, K_h = intr_for_use
-                if frame_w is not None and K_w is not None and K_h is not None:
-                    try:
-                        K_w_i = int(K_w); K_h_i = int(K_h)
-                    except Exception:
-                        K_w_i = None; K_h_i = None
-                    if K_w_i is not None and K_h_i is not None and (K_w_i != frame_w or K_h_i != frame_h):
-                        sx = float(frame_w) / float(K_w_i); sy = float(frame_h) / float(K_h_i)
-                        fx = fx * sx; fy = fy * sy; cx = cx * sx; cy = cy * sy
-            d_cam = np.array([(u - cx) / fx, (v - cy) / fy, float(chosen_z)], dtype=float)
-            d_cam_n = d_cam / (np.linalg.norm(d_cam) + 1e-12)
-            d_world = Rmat @ d_cam_n
-            yaw_deg = float((math.degrees(math.atan2(float(d_world[0]), -float(d_world[2]))) + 360.0) % 360.0)
-        except Exception:
-            yaw_deg = None
-
-        return obj_x, obj_y, yaw_deg, p_world
-
-    except Exception as e:
-        # keep behavior consistent with original: return Nones on failure
-        print("compute_object_world_and_mapped (improved) error:", e)
-        return None, None, None, None
-
-
-#----------------- Original compute_object_world_and_mapped (commented out)-------------
-
-# def compute_object_world_and_mapped(cam_pos3d, cam_rot, intrinsics_tuple, bbox_xyxy, depth_val,
-#                                    chosen_proj, s_map, R_map, t_map, frame_size=None, z_sign=1.0):
-#     try:
-#         if cam_pos3d is None or cam_rot is None or depth_val is None:
-#             return None, None, None, None
-#         x1, y1, x2, y2 = bbox_xyxy
-#         u = (x1 + x2) * 0.5; v = (y1 + y2) * 0.5
-#         if intrinsics_tuple is None:
-#             fw, fh = (frame_size if frame_size is not None else (640, 480))
-#             fx = fy = 0.8 * max(fw, fh); cx = fw / 2.0; cy = fh / 2.0
-#         else:
-#             fx, fy, cx, cy, K_img_w, K_img_h = intrinsics_tuple
-#             if frame_size is not None and K_img_w is not None and K_img_h is not None:
-#                 frame_w, frame_h = frame_size
-#                 try:
-#                     K_w = int(K_img_w); K_h = int(K_img_h)
-#                 except Exception:
-#                     K_w = None; K_h = None
-#                 if K_w is not None and K_h is not None and (K_w != frame_w or K_h != frame_h):
-#                     sx = float(frame_w) / float(K_w); sy = float(frame_h) / float(K_h)
-#                     fx = fx * sx; fy = fy * sy; cx = cx * sx; cy = cy * sy
-#         d_cam = np.array([(u - cx) / fx, (v - cy) / fy, float(z_sign)], dtype=float)
-#         n = np.linalg.norm(d_cam)
-#         d_cam_n = d_cam / n if n != 0 else d_cam
-#         R = np.array(cam_rot, dtype=float)
-#         d_world = R @ d_cam_n
-#         d_world_norm = np.linalg.norm(d_world)
-#         if d_world_norm == 0:
-#             return None, None, None, None
-#         d_world_dir = d_world / d_world_norm
-#         p_obj_world = np.array(cam_pos3d, dtype=float) + float(depth_val) * d_world_dir
-#         obj_proj2 = project_3d_to_2d(p_obj_world.reshape(1, 3), chosen_proj)
-#         obj_mapped = apply_similarity_to_points(obj_proj2, s_map, R_map, t_map)
-#         obj_x = float(obj_mapped[0, 0]); obj_y = float(obj_mapped[0, 1])
-#         yaw_deg = compute_yaw_from_direction(d_world_dir)
-#         return obj_x, obj_y, yaw_deg, p_obj_world
-#     except Exception as e:
-#         logger.exception("compute_object_world_and_mapped error: %s", e)
-#         return None, None, None, None
-
-def compute_yaw_from_direction(d_world_dir):
-    dx = float(d_world_dir[0]); dz = float(d_world_dir[2])
-    ang = math.degrees(math.atan2(dx, -dz))
-    ang = (ang + 360.0) % 360.0
-    return ang
-
-# ----------------- Main pipeline -----------------
-def main():
-    logger.info("Loading and extracting ARKit positions...")
-    positions3d, meta = extract_positions_list()
-    logger.info("Extracted %d frames (3D positions).", len(positions3d))
-
-    if CONVERT_M_TO_FT:
-        positions3d = positions3d * M_TO_FT
-        logger.info("Converted ARKit positions meters -> feet using factor %s", M_TO_FT)
-
-    proj2_all = project_3d_to_2d(positions3d, PROJECTION)
-    logger.info("Projected to 2D (projection=%s), sample: %s", PROJECTION, repr(proj2_all[:6]))
-
-    #-----------------------load floor polygons (must happen before mapping)------------------------#
-    floor_load_result = load_floor_polygons(FLOOR_PATH)
-    if isinstance(floor_load_result, (list, tuple)):
-        if len(floor_load_result) < 3:
-            logger.exception("load_floor_polygons() returned sequence length %d; expected >=3", len(floor_load_result))
-            raise RuntimeError(f"load_floor_polygons() returned sequence length {len(floor_load_result)}; expected >=3")
-        spaces = floor_load_result[0]
-        floor_min = np.asarray(floor_load_result[1], dtype=float)
-        floor_max = np.asarray(floor_load_result[2], dtype=float)
-        fixed_furniture = floor_load_result[3] if len(floor_load_result) > 3 else []
-    else:
-        logger.exception("load_floor_polygons unexpected result type")
-        raise RuntimeError("load_floor_polygons unexpected result type")
-
-    floor_center = (floor_min + floor_max) / 2.0
-    logger.info("Floor bounds: %s %s", floor_min, floor_max)
-
-    #-----------------------also load fixed furniture via dedicated loader and merge--------------------#
-    try:
-        extra_fixed = load_fixed_furniture(FLOOR_PATH)
-        if extra_fixed:
-            if isinstance(fixed_furniture, list):
-                fixed_furniture.extend(extra_fixed)
-            else:
-                fixed_furniture = extra_fixed
-    except Exception as e:
-        logger.warning("Warning: load_fixed_furniture failed: %s", e)
-        if not isinstance(fixed_furniture, list):
-            fixed_furniture = []
-    logger.info("Loaded %d fixed furniture items from %s", len(fixed_furniture) if fixed_furniture is not None else 0, FLOOR_PATH)
-
-    #-----------------------mapping defaults------------------------#
-    s_map, R_map, t_map = 1.0, np.eye(2), np.array([0.0, 0.0])
-    mapped_all = interp_missing(proj2_all)
-    chosen_method = "none"; rotation_used = 0.0; chosen_score = 0; chosen_proj = PROJECTION
-
-    #---------------------mapping: control points or auto heuristic-----------------------#
-    if CONTROL_POINTS and len(CONTROL_POINTS) >= 2:
-        logger.info("Using CONTROL_POINTS for exact alignment (Umeyama similarity).")
-        src = []; dst = []
-        for (fi, fx, fy) in CONTROL_POINTS:
-            if fi < 0 or fi >= len(proj2_all):
-                logger.exception("Control point frame index %d out of range (0..%d)", fi, len(proj2_all)-1)
-                raise ValueError(f"Control point frame index {fi} out of range (0..{len(proj2_all)-1})")
-            src.append(proj2_all[fi]); dst.append([fx, fy])
-        src = np.vstack(src); dst = np.vstack(dst)
-        s_map, R_map, t_map = umeyama_2d(src, dst, with_scaling=True)
-        mapped_all = apply_similarity_to_points(proj2_all, s_map, R_map, t_map)
-        chosen_method = f"umeyama_{len(CONTROL_POINTS)}pts"
-        rotation_used = 0.0
-        chosen_score = count_points_inside_polygons(mapped_all, spaces)
-        chosen_proj = PROJECTION
-    else:
-        logger.info("No control points provided — using automatic mapping heuristic.")
-        floor_json = load_json(FLOOR_PATH)
-        compass = floor_json.get("compassHeading", None)
-        proj_options = ["x,-z", "x,z", "-x,-z", "-x,z", "y,-z"]
-        best_score = -1; best_choice = None
-        for proj in proj_options:
-            p2 = project_3d_to_2d(positions3d, proj)
-            try:
-                mapped_candidate, scale, rot_deg, score = auto_map_and_choose(p2, spaces, floor_min, floor_max, compass=compass)
-            except Exception as e:
-                logger.warning("proj %s failed: %s", proj, e)
-                continue
-            logger.info("proj %s -> score %s (rot %.1f°, scale approx %.2f)", proj, score, rot_deg, scale)
-            if score > best_score:
-                best_score = score
-                best_choice = {"proj": proj, "mapped": mapped_candidate, "scale": scale, "rot_deg": rot_deg, "p2": p2}
-
-        if best_choice is None:
-            logger.warning("Automatic mapping failed for all projections — using center-fit fallback.")
-            proj2_all = project_3d_to_2d(positions3d, PROJECTION)
-            mapped_all = (proj2_all - proj2_all.mean(axis=0)) * 10.0 + (floor_min + floor_max) / 2.0
-            s_map, R_map, t_map = 1.0, np.eye(2), np.array([0.0, 0.0])
-            chosen_method = "fallback_center"; rotation_used = 0.0; chosen_score = 0; chosen_proj = PROJECTION
-        else:
-            proj2_all = best_choice["p2"]
-            mapped_all = best_choice["mapped"]
-            chosen_method = f"auto_proj_{best_choice['proj']}"
-            rotation_used = best_choice["rot_deg"]
-            chosen_score = best_score
-            chosen_proj = best_choice['proj']
-            logger.info("Auto-chosen projection: %s rotation: %s score: %s", best_choice["proj"], rotation_used, chosen_score)
-            try:
-                s_map, R_map, t_map = umeyama_2d(proj2_all, mapped_all, with_scaling=True)
-            except Exception as e:
-                logger.warning("Warning: failed to compute umeyama similarity for mapping; falling back. Error: %s", e)
-                s_map, R_map, t_map = 1.0, np.eye(2), np.array([0.0, 0.0])
-
-    mapped_plot = interp_missing(mapped_all)
-    logger.info("mapped_plot sample: %s", mapped_plot[:5])
-
-    # global orientation voting
-    logger.info("Computing global orientation votes (R vs R.T and forward z sign) across frames...")
+def compute_global_orientation_votes(positions3d, meta):
     votes = []; confidences = []
     for i in range(len(positions3d)):
         cam_rot = None
@@ -392,6 +99,7 @@ def main():
         if i+1 < len(positions3d): neighbor_idx = i+1
         elif i-1 >= 0: neighbor_idx = i-1
         if neighbor_idx is None: continue
+        from utils.orientation_utils import choose_best_rotation_and_sign
         Ruse, zsign, score = choose_best_rotation_and_sign(positions3d[i], cam_rot, positions3d[neighbor_idx])
         votes.append((Ruse is cam_rot.T, zsign)); confidences.append(score)
 
@@ -400,19 +108,102 @@ def main():
         cnt = Counter(votes)
         most, count = cnt.most_common(1)[0]
         global_use_transpose, global_z_sign = most
-        logger.info("Global orientation chosen by majority vote: use_transpose=%s global_z_sign=%s (votes %d); mean_conf=%0.3f",
-                    global_use_transpose, global_z_sign, len(votes), np.mean(confidences))
+        logger.info(f"Global orientation chosen by majority vote: use_transpose={global_use_transpose} global_z_sign={global_z_sign} (votes {len(votes)}); mean_conf={np.mean(confidences):.3f}")
     else:
         global_use_transpose, global_z_sign = None, None
         logger.info("Global orientation vote: insufficient data -> leaving per-frame auto-detect active")
+    return global_use_transpose, global_z_sign
 
-    # detector init (optional)
+def main():
+    logger.info("Loading and extracting ARKit positions...")
+    positions3d, meta = extract_positions_list(ARKIT_PATH)
+    logger.info(f"Extracted {len(positions3d)} frames (3D positions).")
+
+    if CONVERT_M_TO_FT:
+        positions3d = positions3d * M_TO_FT
+        logger.info("Converted ARKit positions meters -> feet using factor %s", M_TO_FT)
+
+    proj2_all = project_3d_to_2d(positions3d, PROJECTION)
+    logger.info("Projected to 2D (projection=%s), sample: %s", PROJECTION, proj2_all[:6].tolist())
+
+    spaces, floor_min, floor_max, fixed_furniture = load_floor_polygons(FLOOR_PATH)
+    logger.info("Floor bounds: %s %s", floor_min, floor_max)
+
+    extra_fixed = load_fixed_furniture(FLOOR_PATH)
+    if extra_fixed:
+        if isinstance(fixed_furniture, list):
+            fixed_furniture.extend(extra_fixed)
+        else:
+            fixed_furniture = extra_fixed
+    logger.info("Loaded %d fixed furniture items", len(fixed_furniture) if fixed_furniture is not None else 0)
+
+    s_map, R_map, t_map = 1.0, np.eye(2), np.array([0.0, 0.0])
+    mapped_all = interp_missing(proj2_all)
+    chosen_method = "none"; rotation_used = 0.0; chosen_score = 0; chosen_proj = PROJECTION
+
+    if CONTROL_POINTS and len(CONTROL_POINTS) >= 2:
+        logger.info("Using CONTROL_POINTS for exact alignment (Umeyama similarity).")
+        src = []; dst = []
+        for (fi, fx, fy) in CONTROL_POINTS:
+            if fi < 0 or fi >= len(proj2_all):
+                raise ValueError(f"Control point frame index {fi} out of range (0..{len(proj2_all)-1})")
+            src.append(proj2_all[fi]); dst.append([fx, fy])
+        src = np.vstack(src); dst = np.vstack(dst)
+        s_map, R_map, t_map = umeyama_2d(src, dst, with_scaling=True)
+        mapped_all = apply_similarity_to_points(proj2_all, s_map, R_map, t_map)
+        chosen_method = f"umeyama_{len(CONTROL_POINTS)}pts"
+        rotation_used = 0.0
+        chosen_score = count_points_inside_polygons(mapped_all, spaces)
+        chosen_proj = PROJECTION
+    else:
+        logger.info("No control points provided — using automatic mapping heuristic.")
+        floor_json = load_json(FLOOR_PATH)
+        compass = floor_json.get("compassHeading", None)
+        proj_options = ["x,-z", "x,z", "-x,-z", "-x,z", "y,-z"]
+        best_score = -1; best_choice = None
+        for proj in proj_options:
+            p2 = project_3d_to_2d(positions3d, proj)
+            try:
+                mapped_candidate, scale, rot_deg, score = auto_map_and_choose(p2, spaces, floor_min, floor_max, compass=compass)
+            except Exception as e:
+                logger.warning("proj %s failed: %s", proj, e)
+                continue
+            logger.info("proj %s -> score %d (rot %.1f, scale approx %.2f)", proj, score, rot_deg, scale)
+            if score > best_score:
+                best_score = score
+                best_choice = {"proj": proj, "mapped": mapped_candidate, "scale": scale, "rot_deg": rot_deg, "p2": p2}
+
+        if best_choice is None:
+            logger.warning("Automatic mapping failed for all projections — using center-fit fallback.")
+            proj2_all = project_3d_to_2d(positions3d, PROJECTION)
+            mapped_all = (proj2_all - proj2_all.mean(axis=0)) * 10.0 + (floor_min + floor_max) / 2.0
+            s_map, R_map, t_map = 1.0, np.eye(2), np.array([0.0, 0.0])
+            chosen_method = "fallback_center"; rotation_used = 0.0; chosen_score = 0; chosen_proj = PROJECTION
+        else:
+            proj2_all = best_choice["p2"]
+            mapped_all = best_choice["mapped"]
+            chosen_method = f"auto_proj_{best_choice['proj']}"
+            rotation_used = best_choice["rot_deg"]
+            chosen_score = best_score
+            chosen_proj = best_choice['proj']
+            logger.info("Auto-chosen projection: %s rotation: %.1f score: %d", chosen_proj, rotation_used, chosen_score)
+            try:
+                s_map, R_map, t_map = umeyama_2d(proj2_all, mapped_all, with_scaling=True)
+            except Exception as e:
+                logger.warning("Failed to compute umeyama similarity; falling back. Error: %s", e)
+                s_map, R_map, t_map = 1.0, np.eye(2), np.array([0.0, 0.0])
+
+    mapped_plot = interp_missing(mapped_all)
+    logger.info("mapped_plot sample: %s", mapped_plot[:5].tolist())
+
+    global_use_transpose, global_z_sign = compute_global_orientation_votes(positions3d, meta)
+
     logger.info("Initializing YOLO detector (this may load weights and take a moment)...")
     detector = None
     try:
         detector = YoloDetector(model_path=YOLO_MODEL, device=YOLO_DEVICE, conf=YOLO_CONF, iou=YOLO_IOU)
     except Exception as e:
-        logger.warning("Warning: YOLO detector not available or failed to initialize: %s", e)
+        logger.warning("YOLO detector not available or failed to initialize: %s", e)
         logger.warning("If you want detection, install ultralytics and provide YOLO_MODEL weights at %s", YOLO_MODEL)
         return {
             "positions3d": positions3d,
@@ -427,42 +218,24 @@ def main():
             "mapping": {"method": chosen_method, "proj": chosen_proj, "rot_deg": rotation_used, "score": chosen_score}
         }
 
-    # init Zoe optionally
     try:
-        if init_zoe is not None:
-            init_zoe(ZOE_MODEL_NAME, device=None)
+        if ZoeDepthForDepthEstimation is not None:
+            init_zoe(ZOE_MODEL_NAME)
     except Exception as e:
         logger.warning("Zoe init warning: %s", e)
 
-    # run detection and mapping for first-seen classes
     found_first = {}
     if VIDEO_PATH.exists():
-        found_first = process_video_first_per_class(
-                video_path=VIDEO_PATH,
-                detector=detector,
-                meta=meta,
-                mapped_plot=mapped_plot,
-                positions3d=positions3d,
-                spaces=spaces,                     # include if your function expects it
-                s_map=s_map,
-                R_map=R_map,
-                t_map=t_map,
-                chosen_proj=chosen_proj,
-                target_classes=TARGET_CLASSES,     # explicit: avoids missing-arg errors
-                save_detected=True,
-                debug_reproject=DEBUG_REPROJECT,
-                reproject_csv=OUT_REPRO_CSV,
-                global_use_transpose=global_use_transpose,
-                global_z_sign=global_z_sign,
-                SAVE_DETECTED_CROPS=SAVE_DETECTED_CROPS,
-                OUT_DEBUG_CSV=OUT_DEBUG_CSV,
-                M_TO_FT=M_TO_FT
-            )
+        found_first = process_video_first_per_class(VIDEO_PATH, detector, meta, mapped_plot, positions3d,
+                                                    s_map, R_map, t_map, chosen_proj,
+                                                    TARGET_CLASSES, spaces=spaces, save_detected=True,
+                                                    debug_reproject=DEBUG_REPROJECT, reproject_csv=OUT_REPRO_CSV,
+                                                    global_use_transpose=global_use_transpose, global_z_sign=global_z_sign,
+                                                    room_margin=0.5, verbose=True)
         logger.info("First-seen classes collected: %d", len(found_first))
     else:
-        logger.info("Video not found at %s -> skipping detection", VIDEO_PATH)
+        logger.warning("Video not found at %s -> skipping detection", VIDEO_PATH)
 
-    # save CSV
     if found_first:
         rows = []
         for cls_l, info in found_first.items():
@@ -483,6 +256,7 @@ def main():
                 "distance_ft": info.get('distance_ft'),
             })
         df = pd.DataFrame(rows)
+        OUT_DATA_DIR.mkdir(parents=True, exist_ok=True)
         df.to_csv(OUT_CSV, index=False)
         logger.info("Saved detections CSV: %s", OUT_CSV)
     else:
@@ -518,6 +292,8 @@ if __name__ == "__main__":
         print("Missing floor polygons or bounds — cannot plot.")
         sys.exit(0)
 
+    CLASS_IMAGE_JSON = CLASS_IMAGE_JSON  # from config
+
     def _validate_class_images(json_path):
         try:
             p = Path(json_path)
@@ -541,10 +317,10 @@ if __name__ == "__main__":
                     pth = Path(pval)
                     if not pth.exists():
                         missing.append(str(pth))
-                    elif pth.suffix.lower() != ".png":
+                    elif pth.suffix.lower() not in (".png", ".jpg", ".jpeg"):
                         not_png.append(str(pth))
                     if v.get("width") is None and v.get("height") is None:
-                        invalid.append(f"{k}: missing width/height in mapping (required)")
+                        invalid.append(f"{k}: missing width/height in mapping (recommended)")
                 else:
                     invalid.append(f"{k}: unsupported mapping type {type(v)}")
             if invalid:
@@ -552,23 +328,35 @@ if __name__ == "__main__":
             if missing:
                 print("PNG mapping contains missing files:", missing)
             if not_png:
-                print("PNG mapping contains non-PNG files (only .png allowed):", not_png)
-            return (len(missing) == 0 and len(not_png) == 0 and len(invalid) == 0)
+                print("PNG mapping contains non-image files:", not_png)
+            return (len(missing) == 0 and len(not_png) == 0)
         except Exception as e:
             print("Validator error:", e)
             return False
 
     if not _validate_class_images(CLASS_IMAGE_JSON):
-        print("PNG mapping validation failed. Fix the JSON or image files and rerun.")
+        print("Image mapping validation failed. Fix the JSON or image files and rerun.")
     else:
+        rej_csv = Path("input_data") / "rejected_detections_room_mismatch.csv"
+        rejected_list = None
+        if rej_csv.exists():
+            try:
+                rejected_list = pd.read_csv(str(rej_csv)).to_dict(orient='records')
+                print(f"Loaded {len(rejected_list)} rejected detections for visualization.")
+            except Exception as e:
+                print("Warning: failed to load rejected CSV for plotting:", e)
+                rejected_list = None
+
         try:
             plot_floorplan(found_first, spaces, fixed_furniture, floor_min, floor_max, mapped_plot,
-                           out_path=DATA_DIR / "floor_plan_with_pngs.png",
+                           out_path=Path("output_data") / "floor_plan_with_pngs.png",
                            title=f"Floor plan — PNG-only — method {result.get('mapping',{}).get('method','?')}",
                            class_image_json=str(CLASS_IMAGE_JSON),
                            rotate_icons=True,
                            remove_white_bg=True,
-                           white_threshold=245)
+                           white_threshold=245,
+                           rejected_list=rejected_list,
+                           meta=result.get("meta"))
         except Exception as e:
             print("Warning: plotting failed:", e)
 

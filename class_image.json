@@ -1,36 +1,36 @@
 {
     "couch": {
-      "path": "objects_png/couch.png",
+      "path": "objects_png/couch_icon.png",
       "width": 0.09,
       "height": 0.03,
       "rotate": false
     },
     "chair": {
-      "path": "objects_png/chair.png",
+      "path": "objects_png/chair_icon.png",
       "width": 0.05,
       "height": 0.03,
       "rotate": false
     }
     ,"tv": {
-      "path": "objects_png/tv.png",
+      "path": "objects_png/tv_icon.png",
       "width": 0.06,
       "height": 0.04,
       "rotate": false
     },
     "sink": {
-      "path": "objects_png/sink.png",
+      "path": "objects_png/sink_icon.png",
       "width": 0.04,
       "height": 0.03,
       "rotate": false
     },
     "bed": {
-      "path": "objects_png/bed.png",
+      "path": "objects_png/bed_icon.png",
       "width": 0.1,
       "height": 0.06,
       "rotate": false
     },
     "person": {
-      "path": "objects_png/person.png",
+      "path": "objects_png/person_icon.png",
       "width": 0.02,
       "height": 0.05,
       "rotate": false

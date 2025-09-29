@@ -1,14 +1,17 @@
-#!/usr/bin/env python3
-import cv2
+"""
+YoloDetector wrapper module. Keeps behavior identical to the monolithic script.
+"""
+
+from pathlib import Path
+import numpy as np
+
 try:
     from ultralytics import YOLO
 except Exception:
     YOLO = None
-import numpy as np
 
-# Keep original class and API
 class YoloDetector:
-    def __init__(self, model_path="models/yolo11n.pt", device="cpu", conf=0.60, iou=0.45):
+    def __init__(self, model_path="models/yolo11n.pt", device="cpu", conf=0.6, iou=0.45):
         if YOLO is None:
             raise RuntimeError("ultralytics.YOLO not available: install ultralytics to use YOLO detection")
         self.model = YOLO(model_path)

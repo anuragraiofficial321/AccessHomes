@@ -1,14 +1,13 @@
-#!/usr/bin/env python3
+"""
+Floor polygon loader functions (load_floor_polygons, load_fixed_furniture)
+"""
+
 import numpy as np
 from pathlib import Path
-import json
+from utils.json_utils import load_json
 
-def load_json(path):
-    with open(path, "r") as f:
-        return json.load(f)
-
-def load_floor_polygons(FLOOR_PATH):
-    floor = load_json(FLOOR_PATH)
+def load_floor_polygons(floor_path):
+    floor = load_json(floor_path)
     spaces = []
     fixed_furniture = []
     floors_list = floor.get('floors', []) or []
@@ -22,7 +21,7 @@ def load_floor_polygons(FLOOR_PATH):
             if coords:
                 poly = coords[0] if isinstance(coords[0][0], list) else coords
                 poly_arr = np.array(poly, dtype=float)
-                spaces.append({"id": s.get('id'), "name": s.get('name') or s.get('class') or s.get('id'), "poly": poly_arr})
+                spaces.append({"id": s.get('id'), "name": s.get('name') or s.get('class') or s.get('id'), "poly": poly_arr, **({"doors": s.get("doors")} if s.get("doors") else {})})
         ff = s.get('fixedFurniture', []) or []
         for f in ff:
             b = f.get('boundingPolygon') or {}
@@ -53,8 +52,8 @@ def load_floor_polygons(FLOOR_PATH):
     floor_min = all_pts.min(axis=0); floor_max = all_pts.max(axis=0)
     return spaces, floor_min, floor_max, fixed_furniture
 
-def load_fixed_furniture(FLOOR_PATH):
-    floor = load_json(FLOOR_PATH)
+def load_fixed_furniture(floor_path):
+    floor = load_json(floor_path)
     furn = []
     if 'floors' not in floor or not floor['floors']:
         return furn
