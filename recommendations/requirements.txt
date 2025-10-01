@@ -1,0 +1,6 @@
+openai
+opencv-python
+numpy
+Pillow
+python-dotenv      
+tqdm               

@@ -1,0 +1,21 @@
+{
+  "frame_group": [
+    "/home/anuragrai/Desktop/AccessHomes/recommendations_output/frames/frame_0010.jpg",
+    "/home/anuragrai/Desktop/AccessHomes/recommendations_output/frames/frame_0011.jpg",
+    "/home/anuragrai/Desktop/AccessHomes/recommendations_output/frames/frame_0012.jpg",
+    "/home/anuragrai/Desktop/AccessHomes/recommendations_output/frames/frame_0013.jpg",
+    "/home/anuragrai/Desktop/AccessHomes/recommendations_output/frames/frame_0014.jpg"
+  ],
+  "composite_image": "/home/anuragrai/Desktop/AccessHomes/recommendations_output/frames/composite_group_0010_0014.png",
+  "timestamp_utc": "2025-09-30T14:45:25.221660Z",
+  "persona": "Owner is an elderly person with mobility issues and a preference for minimalist design.",
+  "product_count": 89,
+  "model_raw": "```json\n{\n  \"selected_id\": \"e172bb5b-199\",\n  \"selected_name\": \"Adjustable Shower Chair Bath Transfer Bench\",\n  \"reason\": \"The adjustable shower chair provides stability and safety for an elderly person with mobility issues, ensuring comfort and reducing the risk of falls in the bathroom.\",\n  \"confidence\": 0.9,\n  \"placement\": \"Add near the shower area in the bathroom.\"\n}\n```",
+  "recommendation": {
+    "selected_id": "e172bb5b-199",
+    "selected_name": "Adjustable Shower Chair Bath Transfer Bench",
+    "reason": "The adjustable shower chair provides stability and safety for an elderly person with mobility issues, ensuring comfort and reducing the risk of falls in the bathroom.",
+    "confidence": 0.9,
+    "placement": "Add near the shower area in the bathroom."
+  }
+}

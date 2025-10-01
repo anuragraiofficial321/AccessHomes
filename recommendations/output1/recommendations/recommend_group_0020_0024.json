@@ -1,0 +1,21 @@
+{
+  "frame_group": [
+    "/home/anuragrai/Desktop/AccessHomes/recommendations_output/frames/frame_0020.jpg",
+    "/home/anuragrai/Desktop/AccessHomes/recommendations_output/frames/frame_0021.jpg",
+    "/home/anuragrai/Desktop/AccessHomes/recommendations_output/frames/frame_0022.jpg",
+    "/home/anuragrai/Desktop/AccessHomes/recommendations_output/frames/frame_0023.jpg",
+    "/home/anuragrai/Desktop/AccessHomes/recommendations_output/frames/frame_0024.jpg"
+  ],
+  "composite_image": "/home/anuragrai/Desktop/AccessHomes/recommendations_output/frames/composite_group_0020_0024.png",
+  "timestamp_utc": "2025-09-30T14:25:59.905641Z",
+  "persona": "minimalist",
+  "product_count": 89,
+  "model_raw": "```json\n{\n    \"selected_id\": \"be71dde3-30b\",\n    \"selected_name\": \"Motion Sensor Night Light\",\n    \"reason\": \"The minimalist interior can benefit from the Motion Sensor Night Light, which provides convenience and safety without adding clutter.\",\n    \"confidence\": 0.9,\n    \"placement\": \"add near the entrance for automatic illumination\"\n}\n```",
+  "recommendation": {
+    "selected_id": "be71dde3-30b",
+    "selected_name": "Motion Sensor Night Light",
+    "reason": "The minimalist interior can benefit from the Motion Sensor Night Light, which provides convenience and safety without adding clutter.",
+    "confidence": 0.9,
+    "placement": "add near the entrance for automatic illumination"
+  }
+}

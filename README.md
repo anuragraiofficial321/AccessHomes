@@ -285,3 +285,69 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
 * Keep `class_image.json` icons and `models/` weights in the repo or point paths in `config/config.py`.
 
 ---
+
+
+
+
+{
+  "basecabinet": {
+    "path": "/mnt/data/cubicasa_icons_v3/basecabinet.png",
+    "width": 3.0,
+    "height": 1.0,
+    "rotate": false
+  },
+  "wallcabinet": {
+    "path": "/mnt/data/cubicasa_icons_v3/wallcabinet.png",
+    "width": 3.0,
+    "height": 1.0,
+    "rotate": false
+  },
+  "electricalappliance integratedstove": {
+    "path": "/mnt/data/cubicasa_icons_v3/stove.png",
+    "width": 2.0,
+    "height": 2.0,
+    "rotate": false
+  },
+  "electricalappliance refrigerator": {
+    "path": "/mnt/data/cubicasa_icons_v3/refrigerator.png",
+    "width": 2.0,
+    "height": 3.0,
+    "rotate": false
+  },
+  "roundsink": {
+    "path": "/mnt/data/cubicasa_icons_v3/roundsink.png",
+    "width": 1.5,
+    "height": 1.5,
+    "rotate": false
+  },
+  "sink": {
+    "path": "/mnt/data/cubicasa_icons_v3/sink.png",
+    "width": 1.5,
+    "height": 1.5,
+    "rotate": false
+  },
+  "shower": {
+    "path": "/mnt/data/cubicasa_icons_v3/shower.png",
+    "width": 3.0,
+    "height": 3.0,
+    "rotate": false
+  },
+  "showerplatform": {
+    "path": "/mnt/data/cubicasa_icons_v3/showerplatform.png",
+    "width": 3.0,
+    "height": 3.0,
+    "rotate": false
+  },
+  "toilet": {
+    "path": "/mnt/data/cubicasa_icons_v3/toilet.png",
+    "width": 1.5,
+    "height": 2.0,
+    "rotate": false
+  },
+  "closet": {
+    "path": "/mnt/data/cubicasa_icons_v3/closet.png",
+    "width": 4.0,
+    "height": 2.5,
+    "rotate": false
+  }
+}

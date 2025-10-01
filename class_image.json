@@ -1,45 +1,99 @@
+
 {
-    "couch": {
-      "path": "objects_png/couch_icon.png",
-      "width": 0.09,
-      "height": 0.03,
-      "rotate": false
-    },
-    "chair": {
-      "path": "objects_png/chair_icon.png",
-      "width": 0.05,
-      "height": 0.03,
-      "rotate": false
-    }
-    ,"tv": {
-      "path": "objects_png/tv_icon.png",
-      "width": 0.06,
-      "height": 0.04,
-      "rotate": false
-    },
-    "sink": {
-      "path": "objects_png/sink_icon.png",
-      "width": 0.04,
-      "height": 0.03,
-      "rotate": false
-    },
-    "bed": {
-      "path": "objects_png/bed_icon.png",
-      "width": 0.1,
-      "height": 0.06,
-      "rotate": false
-    },
-    "person": {
-      "path": "objects_png/person_icon.png",
-      "width": 0.02,
-      "height": 0.05,
-      "rotate": false
-    },
-    "refrigerator": {
-      "path": "objects_png/refrigerator.png",
-      "width": 0.04,
-      "height": 0.07,
-      "rotate": false
-    }
+  "couch": {
+    "path": "objects_png/couch_icon.png",
+    "width": 0.07,
+    "height": 0.03,
+    "rotate": false
+  },
+  "chair": {
+    "path": "objects_png/chair_icon.png",
+    "width": 0.02,
+    "height": 0.01,
+    "rotate": false
+  }
+  ,"tv": {
+    "path": "objects_png/tv_icon.png",
+    "width": 0.03,
+    "height": 0.02,
+    "rotate": false
+  },
+  "sink": {
+    "path": "objects_png/sink_icon.png",
+    "width": 0.03,
+    "height": 0.02,
+    "rotate": false
+  },
+  "bed": {
+    "path": "objects_png/bed_icon.png",
+    "width": 0.08,
+    "height": 0.05,
+    "rotate": false
+  },
+  "person": {
+    "path": "objects_png/person_icon.png",
+    "width": 0.02,
+    "height": 0.05,
+    "rotate": false
+  },
+  "refrigerator": {
+    "path": "objects_png/refrigerator.png",
+    "width": 0.04,
+    "height": 0.07,
+    "rotate": false
+  },
+  "basecabinet": {
+    "path": "objects_png/sink_icon.png",
+    "width": 0.03,
+    "height": 0.02,
+    "rotate": false
+  },
+  "closet": {
+    "path": "objects_png/sink_icon.png",
+    "width": 0.03,
+    "height": 0.02,
+    "rotate": false
+  },
+  "electricalappliance integratedstove": {
+    "path": "objects_png/sink_icon.png",
+    "width": 0.03,
+    "height": 0.02,
+    "rotate": false
+  },
+  "electricalappliance refrigerator": {
+    "path": "objects_png/sink_icon.png",
+    "width": 0.03,
+    "height": 0.02,
+    "rotate": false
+  },
+  "roundsink": {
+   "path": "objects_png/sink_icon.png",
+    "width": 0.03,
+    "height": 0.02,
+    "rotate": false
+  },
+  "shower": {
+    "path": "objects_png/sink_icon.png",
+    "width": 0.03,
+    "height": 0.02,
+    "rotate": false
+  },
+  "showerplatform": {
+   "path": "objects_png/sink_icon.png",
+    "width": 0.03,
+    "height": 0.02,
+    "rotate": false
+  },
+  "toilet": {
+    "path": "objects_png/sink_icon.png",
+    "width": 0.03,
+    "height": 0.02,
+    "rotate": false
+  },
+  "wallcabinet": {
+   "path": "objects_png/sink_icon.png",
+    "width": 0.03,
+    "height": 0.02,
+    "rotate": false
+  }
 }
-  

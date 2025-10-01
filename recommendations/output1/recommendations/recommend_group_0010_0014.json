@@ -1,0 +1,21 @@
+{
+  "frame_group": [
+    "/home/anuragrai/Desktop/AccessHomes/recommendations_output/frames/frame_0010.jpg",
+    "/home/anuragrai/Desktop/AccessHomes/recommendations_output/frames/frame_0011.jpg",
+    "/home/anuragrai/Desktop/AccessHomes/recommendations_output/frames/frame_0012.jpg",
+    "/home/anuragrai/Desktop/AccessHomes/recommendations_output/frames/frame_0013.jpg",
+    "/home/anuragrai/Desktop/AccessHomes/recommendations_output/frames/frame_0014.jpg"
+  ],
+  "composite_image": "/home/anuragrai/Desktop/AccessHomes/recommendations_output/frames/composite_group_0010_0014.png",
+  "timestamp_utc": "2025-09-30T14:25:04.392628Z",
+  "persona": "minimalist",
+  "product_count": 89,
+  "model_raw": "```json\n{\n  \"selected_id\": \"921eca6c-764\",\n  \"selected_name\": \"Wall Mount LED Motion Rechargeable Sensor Night Light\",\n  \"reason\": \"This minimalist lighting solution enhances safety and convenience without cluttering the space, aligning with the user's minimalist preference.\",\n  \"confidence\": 0.9,\n  \"placement\": \"add near the entrance of the bedroom\"\n}\n```",
+  "recommendation": {
+    "selected_id": "921eca6c-764",
+    "selected_name": "Wall Mount LED Motion Rechargeable Sensor Night Light",
+    "reason": "This minimalist lighting solution enhances safety and convenience without cluttering the space, aligning with the user's minimalist preference.",
+    "confidence": 0.9,
+    "placement": "add near the entrance of the bedroom"
+  }
+}

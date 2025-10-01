@@ -136,6 +136,7 @@ def main():
         else:
             fixed_furniture = extra_fixed
     logger.info("Loaded %d fixed furniture items", len(fixed_furniture) if fixed_furniture is not None else 0)
+    print("fixed_furniture Name",fixed_furniture)
 
     s_map, R_map, t_map = 1.0, np.eye(2), np.array([0.0, 0.0])
     mapped_all = interp_missing(proj2_all)

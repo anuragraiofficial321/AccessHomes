@@ -25,7 +25,7 @@ YOLO_IOU = 0.45
 ZOE_MODEL_NAME = "Intel/zoedepth-nyu-kitti"
 ZOE_DEVICE = "cuda" if hasattr(cv2, "cuda") and cv2.cuda.getCudaEnabledDeviceCount() > 0 else "cpu"
 
-TARGET_CLASSES = ["couch", "sink", "chair", "bed", "tv","person","table","toilet","potted plant","dining table","laptop","microwave","oven","refrigerator"]  # edit as needed, or set to [] to keep all classes
+TARGET_CLASSES = ["couch"]  # edit as needed, or set to [] to keep all classes
 CLASS_IMAGE_JSON = "class_image.json" 
 
 PROJECTION = "x,-z"

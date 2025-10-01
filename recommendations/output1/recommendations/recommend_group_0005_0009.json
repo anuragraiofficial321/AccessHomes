@@ -1,0 +1,21 @@
+{
+  "frame_group": [
+    "/home/anuragrai/Desktop/AccessHomes/recommendations_output/frames/frame_0005.jpg",
+    "/home/anuragrai/Desktop/AccessHomes/recommendations_output/frames/frame_0006.jpg",
+    "/home/anuragrai/Desktop/AccessHomes/recommendations_output/frames/frame_0007.jpg",
+    "/home/anuragrai/Desktop/AccessHomes/recommendations_output/frames/frame_0008.jpg",
+    "/home/anuragrai/Desktop/AccessHomes/recommendations_output/frames/frame_0009.jpg"
+  ],
+  "composite_image": "/home/anuragrai/Desktop/AccessHomes/recommendations_output/frames/composite_group_0005_0009.png",
+  "timestamp_utc": "2025-09-30T14:24:45.451275Z",
+  "persona": "minimalist",
+  "product_count": 89,
+  "model_raw": "```json\n{\n  \"selected_id\": \"f82b1694-8be\",\n  \"selected_name\": \"Ovela Non-Slip Kitchen Mats\",\n  \"reason\": \"The non-slip kitchen mats will enhance safety and comfort in the kitchen, aligning with the minimalist style by providing functionality without clutter.\",\n  \"confidence\": 0.9,\n  \"placement\": \"add near the kitchen sink area\"\n}\n```",
+  "recommendation": {
+    "selected_id": "f82b1694-8be",
+    "selected_name": "Ovela Non-Slip Kitchen Mats",
+    "reason": "The non-slip kitchen mats will enhance safety and comfort in the kitchen, aligning with the minimalist style by providing functionality without clutter.",
+    "confidence": 0.9,
+    "placement": "add near the kitchen sink area"
+  }
+}

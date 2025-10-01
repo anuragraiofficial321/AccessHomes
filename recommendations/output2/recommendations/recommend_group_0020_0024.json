@@ -1,0 +1,21 @@
+{
+  "frame_group": [
+    "/home/anuragrai/Desktop/AccessHomes/recommendations_output/frames/frame_0020.jpg",
+    "/home/anuragrai/Desktop/AccessHomes/recommendations_output/frames/frame_0021.jpg",
+    "/home/anuragrai/Desktop/AccessHomes/recommendations_output/frames/frame_0022.jpg",
+    "/home/anuragrai/Desktop/AccessHomes/recommendations_output/frames/frame_0023.jpg",
+    "/home/anuragrai/Desktop/AccessHomes/recommendations_output/frames/frame_0024.jpg"
+  ],
+  "composite_image": "/home/anuragrai/Desktop/AccessHomes/recommendations_output/frames/composite_group_0020_0024.png",
+  "timestamp_utc": "2025-09-30T14:46:04.692334Z",
+  "persona": "Owner is an elderly person with mobility issues and a preference for minimalist design.",
+  "product_count": 89,
+  "model_raw": "```json\n{\n    \"selected_id\": \"8bc1bd5e-523\",\n    \"selected_name\": \"Evekare Concealed Flange Safety Grab Bathroom Hand Rail Pull Bar Handle 900mm SS\",\n    \"reason\": \"The grab rail provides essential support for an elderly person with mobility issues, enhancing safety and accessibility in the home while maintaining a minimalist appearance.\",\n    \"confidence\": 0.9,\n    \"placement\": \"add near the entrance of the bathroom\"\n}\n```",
+  "recommendation": {
+    "selected_id": "8bc1bd5e-523",
+    "selected_name": "Evekare Concealed Flange Safety Grab Bathroom Hand Rail Pull Bar Handle 900mm SS",
+    "reason": "The grab rail provides essential support for an elderly person with mobility issues, enhancing safety and accessibility in the home while maintaining a minimalist appearance.",
+    "confidence": 0.9,
+    "placement": "add near the entrance of the bathroom"
+  }
+}

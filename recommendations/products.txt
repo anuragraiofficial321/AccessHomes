@@ -1,0 +1,90 @@
+Product	Type	Supplier	Size	Weight kg
+Sabre 53 Series S07 Door Lever	Doors	Access Hardware		
+Sabre R53 Series H01 Lever on 53mm Round Rose Privacy Set	Doors	Access Hardware		
+Sabre 450 Series Lever Passage Set	Doors	Access Hardware		
+Sabre DL710 Biometric Digital Door Lever	Doors	Access Hardware		
+Yale Unity Entrance Smart Door Handle	Doors	Access Hardware		
+Yale Assure SL Smart Deadbolt with Yale Home	Doors	Access Hardware		
+Yale Assure Smart Door Lock	Doors	Access Hardware		
+Vayyar Fall Detection Devices	Technology	Livius		
+Inclinator Lifts	Lifts	PR King		
+Stair Platform Lifts	Lifts	PR King		
+Vertical Platform Lifts	Lifts	PR King		
+Stair Lifts	Lifts	PR King		
+Pressalit SCT1000 shower change table	Bathroom, Change Tables	Pressalit		
+Pressalit CT4000 change table electrically height adjustable	Bathrooms, Change Tables	Pressalit		
+Pressalit SCT 3000 shower change table	Bathrooms, Change Tables	Pressalit		
+Pressalit Select TL1 Toilet Lifter plus pan	Bathrooms, Toilets	Pressalit		
+Pressalit Plus Shower Seat Height Adjustable	Bathrooms, Showers	Pressalit		
+Pressalit Plus Support Arm Height Adjustable	Bathrooms, Grabrails	Pressalit		
+Pressalit Kitchen Benchtop Electric Height Adjustable	Kitchens	Pressalit		
+PLUS wash basin bracket with lever control, manually height adjustable with gas cylinder	Basins, Bathrooms	Pressalit		
+MATRIX small wash basin with overflow	Basins, Bathrooms	Pressalit		
+Caroma Opal Support Shower Seat Black	Bathrooms, Showers	Tradelink	40x37x8	2.00
+Fienza Backrest Wall Mount Toilet Satin Stainless Steel	Bathrooms, Toilets	Tradelink	52x27x39	20.00
+Euro Microwave Oven 34L Steel Grey	Kitchens	Tradelink	520x25x41	18.50
+Fienza Grab Rail 90deg 450mm x 450mm Grabrail	Grabrails	Tradelink	53x53x4	1.60
+Oliveri 90 Degree Grab Rail Stainless Steel	Grabrails	Tradelink	96x60x4	2.10
+Clark Punch Mega Single End Right/Left Hand Bowl Sink	Kitchens	Tradelink	44x8x20	8.50
+Caroma Care Plus Bath/Shower Mixer Standard Handle	Tapware	Tradelink	5x16x13	1.00
+MKII Hob Basin Mixer (Fixed) with Extended Lever Handle	Bathrooms, Tapware	Tradelink	18x7x23	1.00
+Caroma Care 600 Wall Basin White	Basins, Bathrooms	Tradelink	6x3x5	18.00
+Nero Bianca Hob Basin Electronic Sensor Tap	Tapware	Tradelink	14x16x5	2.30
+Oliveri Sensor Tap Hob Gooseneck	Tapware	Tradelink	25x5x5	2.23
+Nero Classic Care Bath / Shower Mixer Chrome	Tapware	Tradelink	20x14x14	1.10
+Oliveri Care Accessible Shower Seat	Bathrooms, Showers	Tradelink	97x48x40	2.20
+Luciana Care Shower Grabrails Right Hand	Bathrooms, Showers	Tradelink	116x70x4	5.40
+Caroma Care 660 Cleanflush Pan w/Armrests	Bathrooms, Toilets	Tradelink	96x68x66	60.00
+Fienza Delta Care P Trap Accessible Toilet Pan	Bathrooms, Toilets	Tradelink	88x39x80	63.65
+Emilia Xtra Compact Extra-Height Rimless Ambulant Pan	Bathrooms, Toilets	Tradelink	38x84x62	40.00
+Caroma Care 660 Ambulant Cleanflush Pan	Bathrooms, Toilets	Tradelink	33x87x67	61.80
+TV7400 Amplified Wireless Headset	Technology	Oricom	17x26x8	1.00
+CARE80 Amplified Phone with Picture Dialling	Technology	Oricom		1.00
+VIS08 Big Display Clock Wall/Desk	Technology	Oricom	41x23x15	1.00
+Flip Mobile Phone With SOS Emergency Button	Technology	Oricom		1.00
+Wake N ShakeCurve Alarm	Technology	Oricom	11x21x12	1.00
+Alert LED Sensor in White/Black	Lighting	Beacon	9x9x10	0.20
+Jaxon 2 Light Touch Dimmable Table Lamp in Bronze	Lighting	Beacon	60x38x38	1.20
+Hazel 1 Light Table Lamp White/Black	Lighting	Beacon	43x25x25	2.50
+Bayside Endeavour LED CCT Round IP54 Light With Sensor	Lighting	Beacon	22x22x8	0.40
+Sentinel 2 Light Exterior Wall Spot With Sensor In White/Black	Lighting	Beacon	27x23x34	1.00
+Powermesh 1 Gang Switch in White	Lighting	Beacon	12x8	0.11
+Powermesh 2 Gang Switch in White	Lighting	Beacon	12x8	0.11
+Thermalite 3-in-1 Bathroom Heater, Exhaust Fan and Light	Lighting	Beacon	23x20x43	2.40
+Proflex Magnetic Recumbent Exercise Bike	Technology	Kogan		
+Adjustable Shower Chair Bath Transfer Bench	Bathrooms, Showers	Kogan		
+Kogan 412L Bottom Mount Fridge with Water Dispenser (Stainless Steel)	Kitchens	Kogan	70.3 x 69 x 173cm	76
+Kogan 9kg/6kg Washer Dryer Combo (White)	Kitchens	Kogan	600 x 635 x 850mm	80
+Threshold Ramp 5cm Rise Door Entry Aluminium Ramp	Doors	Kogan	86.5×32×5cm	3.5
+Raised Toilet Seat With Arms and Lock Rises 10cm	Bathrooms, Toilets	Kogan	40 × 43.5 × 10cm	3.7
+Kogan SmarterHome™ Security Camera Video Doorbell 3 Pro	Doors	Kogan	53 x 39 x 137mm	0.2
+Advwin Smart Lock Fingerprint Door Lock	Doors	Kogan		0.6
+Kogan Benchtop Dishwasher (6 Place, White)	Kitchens	Kogan	553 x 498 x 440 mm	19.4
+Altus Bathroom Shower Chair with Back Rest and Arm	Bathrooms, Showers	Kogan	58.5 x 13 x 34.5 cm	3.85
+Kogan Gas Cooktop (Stainless Steel, 60cm)	Kitchens	Kogan	600 x 510 x 110mm	
+4G Volte Mobile Phone for Seniors Big Button LTE Cell Phone	Technology	Kogan		
+Ovela Non-Slip Kitchen Mats	Kitchens	Kogan		
+Motion Sensor Night Light	Lighting	Kogan		
+Safety Bathroom Aid Bath Shower Hand Grab Grip Towel Suction Rail Bar Handle - 2x	Grabrails	Kogan		
+Adjustable Shower Seat	Bathrooms, Showers	Kogan		
+Evekare Concealed Flange Grab Bathroom Hand Rail Pull Bar 200mm Stainless Steel	Grabrails	Kogan		
+Evekare Concealed Flange Safety Grab Bathroom Wall Hand Rail Pull Bar 300mm SS	Grabrails	Kogan		
+Evekare Concealed Flange Safety Grab Bathroom Hand Rail Pull Bar Handle 450mm SS	Grabrails	Kogan		
+Evekare Concealed Flange Safety Grab Bathroom Hand Rail Pull Bar Handle 600mm	Grabrails	Kogan		
+Evekare Concealed Flange Safety Grab Bathroom Hand Rail Pull Bar Handle 900mm SS	Grabrails	Kogan		
+Evekare Concealed Flange Safety Grab Bathroom Hand Rail Bar 450mm SS Matte Black	Grabrails	Kogan		
+Equipmed Over Toilet Support Frame Safety Grab Rail and Backrest	Grabrails	Kogan		
+Equipmed Bed Assist Adjustable Hand Rail Support Aid for Seniors	Grabrails	Kogan		
+Wall Mount LED Motion Rechargeable Sensor Night Light	Lighting	Kogan		
+Wood Night Light Motion Sensor Cordless	Lighting	Kogan		
+LED Motion Sensor PIR Night Light (x2)	Lighting	Kogan		
+Bed Safety Rail Bedside Mobility Aid Support Guard	Grabrails	Kogan		
+Over Toilet Support Frame Safety Grab Rail for Elderly & Mobility Issues	Grabrails	Kogan		
+Bradley 832-102 Drop Down Rail With Locking Pin	Grabrails	Kogan		
+Vivva 7 / 14 Day Weekly Pill Box Medicine Tablet Organizer Dispenser	Kitchens	Kogan		
+Accessible WC Kit	Bathrooms, Toilets	Kogan		
+Stair Handrails Back Metal for Outdoor Staircases 1 to 2 Steps	Grabrails	Kogan		
+Stair Handrails Back Metal for Outdoor Staircases 2 to 3 Steps	Grabrails	Kogan		
+Stair Handrails Back Metal for Outdoor Staircases 3 to 4 Steps	Grabrails	Kogan		
+Centra Recumbent Magnetic Exercise Bike	Technology	Kogan		
+Hand Shower on Vertical Grab Rail	Bathrooms	Kogan		

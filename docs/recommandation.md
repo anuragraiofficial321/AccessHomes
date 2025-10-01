@@ -37,3 +37,17 @@ Step 5: Output
 
   * A PNG/icon of the recommended object,
   * Details of where to place it in the floor plan or house image.
+
+### Steps:
+
+- Generate the yolo summary for given video 
+- pass the floor plan image of cubicasa and generated floorplan and give me recommendation where to place the object on floor plan
+- Pass more than one frame at a time.
+
+
+-----------------------------------------------------------------------
+- In the given code i am able to plot the object png and fixed furniture polygon but i also want to plot the png on fixed furniture so i can show both the png and detected and plotting object on floor plan etc
+
+rewrite plotting code so i check the class using fixed furniture and plot the symbol on floor plan etc
+
+-----------------------------------------------------------------------
