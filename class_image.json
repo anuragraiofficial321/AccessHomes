@@ -19,7 +19,7 @@
     "rotate": false
   },
   "sink": {
-    "path": "objects_png/sink_icon.png",
+    "path": "objects_png/Sink.png",
     "width": 0.03,
     "height": 0.02,
     "rotate": false
@@ -37,63 +37,63 @@
     "rotate": false
   },
   "refrigerator": {
-    "path": "objects_png/refrigerator.png",
+    "path": "objects_png/Refrigerator.png",
     "width": 0.04,
     "height": 0.07,
     "rotate": false
   },
-  "basecabinet": {
-    "path": "objects_png/sink_icon.png",
-    "width": 0.03,
-    "height": 0.02,
-    "rotate": false
-  },
   "closet": {
-    "path": "objects_png/sink_icon.png",
+    "path": "objects_png/Closet.png",
     "width": 0.03,
     "height": 0.02,
     "rotate": false
   },
   "electricalappliance integratedstove": {
-    "path": "objects_png/sink_icon.png",
+    "path": "objects_png/IntegratedStove.png",
     "width": 0.03,
     "height": 0.02,
     "rotate": false
   },
   "electricalappliance refrigerator": {
-    "path": "objects_png/sink_icon.png",
+    "path": "objects_png/Refrigerator.png",
     "width": 0.03,
     "height": 0.02,
     "rotate": false
   },
   "roundsink": {
-   "path": "objects_png/sink_icon.png",
-    "width": 0.03,
-    "height": 0.02,
-    "rotate": false
-  },
-  "shower": {
-    "path": "objects_png/sink_icon.png",
+   "path": "objects_png/RoundSink.png",
     "width": 0.03,
     "height": 0.02,
     "rotate": false
   },
   "showerplatform": {
-   "path": "objects_png/sink_icon.png",
+   "path": "objects_png/ShowerPlatform.png",
     "width": 0.03,
     "height": 0.02,
     "rotate": false
   },
   "toilet": {
-    "path": "objects_png/sink_icon.png",
+    "path": "objects_png/Toilet.png",
     "width": 0.03,
     "height": 0.02,
     "rotate": false
   },
-  "wallcabinet": {
-   "path": "objects_png/sink_icon.png",
-    "width": 0.03,
-    "height": 0.02,
-    "rotate": false
-  }
+  "basecabinet": {
+  "path": "objects_png/BaseCabinet1.png",
+  "width": 0.03,
+  "height": 0.02,
+  "rotate": false
+},
+"wallcabinet": {
+  "path": "objects_png/WallCabinet.png",
+  "width": 0.03,
+  "height": 0.02,
+  "rotate": false
+},
+"doors":{
+  "path": "objects_png/Doors.png",
+  "width": 0.03,
+  "height": 0.02,
+  "rotate": false}
 }
+

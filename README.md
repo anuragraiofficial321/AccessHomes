@@ -351,3 +351,13 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
     "rotate": false
   }
 }
+
+
+
+
+<!-- "wallcabinet": {
+  "path": "objects_png/WallCabinet.png",
+  "width": 0.03,
+  "height": 0.02,
+  "rotate": false
+}, -->
